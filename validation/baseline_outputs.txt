@@ -1,0 +1,133 @@
+# civgrad baseline outputs — regression oracle
+# Captured 2026-07-22T13:45:59Z | python 3.11.15 | jax 0.10.2 | CPU, x64
+# Commands run in order from the repo root, complete stdout below.
+
+$ python3 gsc_net.py
+== GSC:semiconductors ==
+13 places, 14 transitions (4 oracles)
+
+-- Structural SPOFs for Goods --
+   Fab
+   Package
+   Ship_TW_Strait
+
+-- Brittleness (concentration x rebuild_years x co-located risk) --
+     32.0  Wafers_advanced
+     32.0  Chips_fabbed
+     16.0  Chips_packaged
+     15.0  EUV_optics
+     10.0  EUV_tools
+      4.0  Goods
+      2.5  Ga_refined
+      2.0  Ne_crude
+      1.5  Ne_purified
+      0.4  Ga_byproduct
+      0.0  E_waste
+      0.0  EUV_worn
+
+-- What-if: export ban fires (policy token placed) --
+   Chips reachable with ban active + no Ga stockpile: False
+
+-- Deadlock check (bounded, cap=2) --
+   200000 reachable states, 0 deadlock states
+
+-- Doomed-state check: the fab<->equipment trap --
+   marking after premature tool wear: EUV=0, chips=0, pkg=0
+   Chips_fabbed ever reachable again: False
+   (raw materials still flow forever -- livelock, not deadlock: the net keeps 'working' but can never make a chip again)
+
+$ python3 gsc_grad.py
+chip throughput, no disruption:        193.34
+chip throughput, 90% EUV destroyed:    191.33   (1% civilizational haircut)
+
+d(throughput)/d(capacity) — where to invest in CAPACITY:
+    157.043  Fab
+     81.787  Build_EUV
+     29.669  Purify_Ne
+     11.224  Mine
+      3.153  Refurb
+      0.000  Refine_Ga
+      0.000  WaferSupply
+      0.000  OpticsMfg
+      0.000  Consume
+      0.000  Recycle
+     -1.701  Package
+     -2.678  Ship_Strait
+     -6.606  Wear_EUV
+
+d(throughput)/d(initial stock) — where to invest in STOCKPILES:
+      0.848  EUV_worn
+      0.705  Ne_purified
+      0.695  EUV_tools
+      0.358  Ne_crude
+      0.000  Ga_refined
+      0.000  Wafers
+      0.000  EUV_optics
+      0.000  Ga_byproduct
+      0.000  Goods
+      0.000  E_waste
+     -0.016  Pkg
+     -0.020  Chips
+
+$ python3 gsc_validate.py
+== 2022 neon shock replay ==
+(steady-state fab flow 0.975, purify utilization 90%;
+ 50% purification capacity lost, alt-supply tau=9mo)
+
+   WITH ~6mo stockpile (history):
+      throughput dip:   0.1%   recovery to 95%: 16 months
+   WITHOUT stockpile (counterfactual):
+      throughput dip:  24.1%   recovery to 95%: 13 months
+
+   historical record: no fab stoppages; supply normalized ~12-18mo.
+
+== E[throughput] gradients over disruption distribution ==
+CAPACITY:
+      51.415  Fab
+      11.139  Build_EUV
+       9.610  Refine_Ga
+       7.610  Refurb
+       0.804  Purify_Ne
+       0.155  Mine
+       0.062  Recycle
+       0.008  OpticsMfg
+       0.000  Consume
+       0.000  WaferSupply
+      -0.373  Package
+      -1.634  Ship_Strait
+     -24.257  Wear_EUV
+STOCKPILES:
+       0.511  EUV_tools
+       0.434  EUV_worn
+       0.242  Ga_refined
+       0.074  Chips
+       0.035  Ne_purified
+       0.015  Pkg
+
+== FROZEN-PROTOCOL HOLDOUT REPLAYS ==
+(calibrated steady-state fab flow 0.983; no per-event tuning)
+
+   2011 Tohoku (wafers)
+      model: dip  -1.7%, recovery   0mo   | history: minor global impact
+   1993 Sumitomo (packaging)
+      model: dip  -1.7%, recovery   0mo   | history: price spike, brief pain, no catastrophe
+   2019 photoresist (analog)
+      model: dip  -1.9%, recovery   0mo   | history: non-event
+
+$ python3 gsc_adapt.py
+== fitting ALPHA on neon (training event) ==
+   alpha=0.02: counterfactual dip  35.0%, recovery  18.2mo
+   alpha=0.04: counterfactual dip  26.3%, recovery   9.6mo
+   alpha=0.06: counterfactual dip  17.5%, recovery   6.7mo
+   alpha=0.08: counterfactual dip  11.2%, recovery   5.5mo
+   alpha=0.12: counterfactual dip   6.7%, recovery   3.9mo
+
+   ALPHA frozen at 0.06
+   neon WITH 6mo stockpile: dip -0.7%, recovery n/a   | history: no stoppage, ~12-18mo normalization
+
+== HOLDOUTS (alpha frozen, tau emergent) ==
+   Tohoku 2011:        dip  -0.6%, rec   0.0mo | history: minor impact
+   Sumitomo 1993:      dip  57.6%, rec   infmo | history: brief pain, no catastrophe
+   Photoresist 2019
+     realized (~15%):  dip  -0.7%, rec   0.0mo | history: non-event
+     feared (90%):     dip  64.0%, rec  13.7mo | (counterfactual: what the fear implied)
