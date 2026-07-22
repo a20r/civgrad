@@ -30,3 +30,15 @@ jobs:
             echo "::error::SCORECARD.md is stale. Run 'python3 -m validation.runner' and commit the regenerated scorecard (PLAN.md §3)."
             exit 1
           }
+      - name: Site data must be committed fresh (the page reads the same yamls)
+        run: |
+          python3 -m validation.export_site_data
+          git diff --exit-code site/data/ || {
+            echo "::error::site/data is stale. Run 'python3 -m validation.export_site_data' and commit."
+            exit 1
+          }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: JS port must match the scorecard (v1 rows, ±1pp dip / ±1mo recovery)
+        run: node site/test/regression.mjs

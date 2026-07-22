@@ -1,0 +1,77 @@
+[
+ {
+  "name": "fertilizer",
+  "oracle_transition": "ORACLE_Fertilizer",
+  "status": "unexpanded",
+  "next_slice": true,
+  "region": "morocco",
+  "ports": {
+   "outputs": [],
+   "inputs": []
+  },
+  "contract": "phosphate/potash/Haber-Bosch subnet — food system. NEXT SLICE.",
+  "parameters": "none quantified — all fog"
+ },
+ {
+  "name": "mining",
+  "oracle_transition": "ORACLE_Mining",
+  "status": "unexpanded",
+  "region": "global",
+  "ports": {
+   "outputs": [
+    "Ga_byproduct",
+    "Ne_crude"
+   ],
+   "inputs": []
+  },
+  "contract": "bauxite/zinc mining + steel-mill air separation -> byproduct feeds",
+  "contract_note": "Gallium is a byproduct of bauxite/zinc processing; crude neon is a byproduct of steel-mill air separation. Byproduct economics (you cannot scale the byproduct without scaling the host industry) is the interesting structure an expansion should capture.",
+  "parameters": "none quantified — all fog"
+ },
+ {
+  "name": "optics",
+  "oracle_transition": "ORACLE_Optics",
+  "status": "unexpanded",
+  "region": "germany",
+  "ports": {
+   "outputs": [
+    "EUV_optics"
+   ],
+   "inputs": []
+  },
+  "contract": "Zeiss SMT: 30yr optical know-how, mirrors polished to <1nm. Deeper SPOF than ASML itself.",
+  "parameters": "none quantified — all fog"
+ },
+ {
+  "name": "packaging_resin",
+  "oracle_transition": null,
+  "status": "proposed",
+  "opened_by": "sumitomo_1993",
+  "region": "japan",
+  "ports": {
+   "outputs": [
+    "Packaging_resin"
+   ],
+   "inputs": []
+  },
+  "contract": "PROPOSED (no contract string in core/net.py yet): epoxy molding compound / packaging-materials supply feeding the Package transition — the 1993 Sumitomo Chemical plant was ~60% of world supply (see the event yaml). The expansion should give Package a consumable resin input so packaging-materials shocks become representable, and should be designed together with the demand/allocation work (PLAN.md §5) that the Sumitomo hysteresis motivates.",
+  "parameters": "none quantified — all fog"
+ },
+ {
+  "name": "wafer_supply",
+  "oracle_transition": "ORACLE_WaferSupply",
+  "status": "unexpanded",
+  "region": "japan",
+  "ports": {
+   "outputs": [
+    "Wafers_advanced"
+   ],
+   "inputs": []
+  },
+  "contract": "polysilicon -> ingot -> wafer (Shin-Etsu/SUMCO ~50%)",
+  "participates_in": [
+   "tohoku_2011"
+  ],
+  "parameters": "none quantified — all fog"
+ }
+]
