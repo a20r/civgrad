@@ -1,0 +1,12 @@
+# Declared-but-unexpanded subnet: interface + contract only (PLAN.md §1).
+# Expanding this oracle is a subnet PR: match the port places exactly, ship at
+# least one historical event, pass the full gate (PLAN.md §2-3).
+name: optics
+oracle_transition: ORACLE_Optics
+status: unexpanded
+region: germany
+ports:
+  outputs: [EUV_optics]
+  inputs: []
+contract: "Zeiss SMT: 30yr optical know-how, mirrors polished to <1nm. Deeper SPOF than ASML itself."
+parameters: none quantified — all fog (see fog/priority.py)

@@ -1,0 +1,17 @@
+# Declared-but-unexpanded subnet: interface + contract only (PLAN.md §1).
+# Expanding this oracle is a subnet PR: match the port places exactly, ship at
+# least one historical event, pass the full gate (PLAN.md §2-3).
+name: mining
+oracle_transition: ORACLE_Mining     # in map/semiconductors/net.yaml + core/net.py
+status: unexpanded
+region: global
+ports:
+  outputs: [Ga_byproduct, Ne_crude]
+  inputs: []
+contract: "bauxite/zinc mining + steel-mill air separation -> byproduct feeds"
+contract_note: >-
+  Gallium is a byproduct of bauxite/zinc processing; crude neon is a byproduct
+  of steel-mill air separation. Byproduct economics (you cannot scale the
+  byproduct without scaling the host industry) is the interesting structure an
+  expansion should capture.
+parameters: none quantified — all fog (see fog/priority.py)

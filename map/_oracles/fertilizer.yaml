@@ -1,0 +1,14 @@
+# Declared-but-unexpanded subnet: interface + contract only (PLAN.md §1).
+# Expanding this oracle is a subnet PR: match the port places exactly, ship at
+# least one historical event, pass the full gate (PLAN.md §2-3).
+name: fertilizer
+oracle_transition: ORACLE_Fertilizer
+status: unexpanded
+next_slice: true                     # PLAN.md §6.3: open bounty — the food-system
+                                     # slice; scarier and unexplored
+region: morocco
+ports:
+  outputs: []                        # interface to be declared when the slice opens;
+  inputs: []                         # no port places wired into the semiconductor net
+contract: "phosphate/potash/Haber-Bosch subnet — food system. NEXT SLICE."
+parameters: none quantified — all fog (see fog/priority.py)

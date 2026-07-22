@@ -1,0 +1,191 @@
+# map/semiconductors/net.yaml — the semiconductor slice, WITH provenance.
+#
+# TRANSCRIPTION of core/net.py (structure, tokens, rebuild times, regions) and
+# core/continuous.py (flow capacities, frozen globals). For v0.1 the Python
+# modules are authoritative and this file is the contribution surface: a data
+# PR improves a number HERE, with a citation (PLAN.md §2: no source, no
+# merge), and a maintainer mirrors it into core/ until a loader lands
+# (KNOWN_ISSUES.md).
+#
+# Provenance schema (PLAN.md §2): every numeric parameter carries
+#   {value, units, source, confidence: A|B|C, date}
+# Confidence grades are assigned by reviewers, not authors. Every parameter
+# below is confidence C — a session estimate that still needs a citation.
+# Do not invent citations; replace `source` with a real URL in a data PR.
+
+_session_estimate: &sess
+  source: "session estimate — needs citation"
+  confidence: C
+  date: "2026-07-22"
+
+net: "GSC:semiconductors"   # legacy internal name, kept: renaming is cosmetic
+                            # and the baseline regression check quotes it
+arc_weights: >-
+  All v0.1 arcs are unit stoichiometry (1 token per firing), confidence C,
+  session estimate. A future non-unit weight must carry its own inline
+  provenance dict.
+
+# ---------------------------------------------------------------- places ----
+places:
+  - name: Ga_byproduct
+    region: global
+    initial_tokens: {value: 3, units: tokens, <<: *sess}
+    rebuild_years:  {value: 0.1, units: years, <<: *sess}
+  - name: Ga_refined
+    region: china
+    initial_tokens: {value: 1, units: tokens, <<: *sess}
+    rebuild_years:  {value: 2.5, units: years, <<: *sess}
+  - name: Ne_crude
+    region: global
+    initial_tokens: {value: 2, units: tokens, <<: *sess}
+    rebuild_years:  {value: 0.5, units: years, <<: *sess}
+  - name: Ne_purified
+    region: mixed
+    initial_tokens: {value: 1, units: tokens, <<: *sess}
+    rebuild_years:  {value: 1.5, units: years, <<: *sess}
+  - name: EUV_tools
+    region: netherlands
+    initial_tokens: {value: 1, units: tokens, <<: *sess}
+    rebuild_years:  {value: 10, units: years, <<: *sess}
+  - name: EUV_optics
+    region: germany            # Zeiss, sole source
+    initial_tokens: {value: 1, units: tokens, <<: *sess}
+    rebuild_years:  {value: 15, units: years, <<: *sess}
+  - name: EUV_worn
+    region: taiwan
+    initial_tokens: {value: 0, units: tokens, <<: *sess}
+    rebuild_years:  {value: 0, units: years, <<: *sess}
+  - name: Wafers_advanced
+    region: taiwan
+    initial_tokens: {value: 1, units: tokens, <<: *sess}
+    rebuild_years:  {value: 8, units: years, <<: *sess}
+  - name: Chips_fabbed
+    region: taiwan
+    initial_tokens: {value: 0, units: tokens, <<: *sess}
+    rebuild_years:  {value: 8, units: years, <<: *sess}
+  - name: Chips_packaged
+    region: taiwan
+    initial_tokens: {value: 0, units: tokens, <<: *sess}
+    rebuild_years:  {value: 4, units: years, <<: *sess}
+  - name: Goods
+    region: global
+    initial_tokens: {value: 0, units: tokens, <<: *sess}
+    rebuild_years:  {value: 1, units: years, <<: *sess}
+  - name: E_waste
+    region: global
+    initial_tokens: {value: 0, units: tokens, <<: *sess}
+    rebuild_years:  {value: 0, units: years, <<: *sess}
+  - name: ExportBan_CN_US
+    region: policy             # policy token: presence BLOCKS Refine_Ga
+    initial_tokens: {value: 0, units: tokens, <<: *sess}
+    rebuild_years:  {value: 0, units: years, <<: *sess}
+
+# ----------------------------------------------------------- transitions ----
+# capacity = relative flow capacity in the continuous relaxation (cap0 in
+# core/continuous.py); read_arcs require but do not consume; inhibitors BLOCK
+# firing while marked.
+transitions:
+  - name: Refine_Ga
+    region: china
+    inputs:  {Ga_byproduct: 1}
+    outputs: {Ga_refined: 1}
+    inhibitors: [ExportBan_CN_US]
+    capacity: {value: 1.0, units: relative flow, <<: *sess}
+  - name: Purify_Ne
+    region: mixed
+    inputs:  {Ne_crude: 1}
+    outputs: {Ne_purified: 1}
+    capacity: {value: 1.0, units: relative flow, <<: *sess}
+  - name: Fab
+    region: taiwan
+    inputs:  {Ga_refined: 1, Ne_purified: 1, Wafers_advanced: 1}
+    outputs: {Chips_fabbed: 1}
+    read_arcs: {EUV_tools: 1}
+    capacity: {value: 1.0, units: relative flow, <<: *sess}
+  - name: Package
+    region: taiwan
+    inputs:  {Chips_fabbed: 1}
+    outputs: {Chips_packaged: 1}
+    capacity: {value: 1.0, units: relative flow, <<: *sess}
+  - name: Ship_TW_Strait
+    region: taiwan_strait
+    inputs:  {Chips_packaged: 1}
+    outputs: {Goods: 1}
+    capacity: {value: 1.0, units: relative flow, <<: *sess}
+  - name: Consume
+    region: global
+    inputs:  {Goods: 1}
+    outputs: {E_waste: 1}
+    capacity: {value: 1.0, units: relative flow, <<: *sess}
+  - name: Recycle
+    region: global
+    inputs:  {E_waste: 1}
+    outputs: {Ga_byproduct: 1}
+    capacity: {value: 0.05, units: relative flow, <<: *sess}   # near-dead loop closure
+
+  # -- EquipMfg subnet (REFINED from ORACLE_EquipMfg in the design session) --
+  - name: Build_EUV
+    region: netherlands
+    inputs:  {Chips_packaged: 1, EUV_optics: 1}
+    outputs: {EUV_tools: 1}
+    capacity: {value: 0.03, units: relative flow, <<: *sess}   # tools are slow to build
+  - name: Wear_EUV
+    region: taiwan
+    inputs:  {EUV_tools: 1}
+    outputs: {EUV_worn: 1}
+    capacity: {value: 0.15, units: relative flow, <<: *sess}   # tools wear ~15%/period
+  - name: Refurb
+    region: netherlands
+    inputs:  {EUV_worn: 1, Chips_packaged: 1}
+    outputs: {EUV_tools: 1}
+    capacity: {value: 0.2, units: relative flow, <<: *sess}
+
+  # -- oracles: the zoomed-out neighbors (interfaces in map/_oracles/) --
+  - name: ORACLE_Mining
+    oracle: true
+    interface: map/_oracles/mining.yaml
+    region: global
+    outputs: {Ga_byproduct: 1, Ne_crude: 1}
+    capacity: {value: 1.0, units: relative flow, <<: *sess}    # "Mine" in the relaxation
+  - name: ORACLE_WaferSupply
+    oracle: true
+    interface: map/_oracles/wafer_supply.yaml
+    region: japan
+    outputs: {Wafers_advanced: 1}
+    capacity: {value: 1.0, units: relative flow, <<: *sess}
+  - name: ORACLE_Optics
+    oracle: true
+    interface: map/_oracles/optics.yaml
+    region: germany
+    outputs: {EUV_optics: 1}
+    capacity: {value: 0.03, units: relative flow, <<: *sess}   # Zeiss is slow to scale
+  - name: ORACLE_Fertilizer
+    oracle: true
+    interface: map/_oracles/fertilizer.yaml
+    region: morocco
+    outputs: {}
+
+# ------------------------------------------------------------ continuous ----
+continuous:
+  note: >-
+    core/continuous.py relaxes this net (all stocks start at 1.0; the policy
+    inhibitor and ORACLE_Fertilizer are not represented). Aliases map discrete
+    names to the continuous model's names.
+  aliases:
+    Wafers_advanced: Wafers
+    Chips_fabbed: Chips
+    Chips_packaged: Pkg
+    Ship_TW_Strait: Ship_Strait
+    ORACLE_Mining: Mine
+    ORACLE_WaferSupply: WaferSupply
+    ORACLE_Optics: OpticsMfg
+
+# -------------------------------------------------------- frozen globals ----
+# Set during the neon training event and FROZEN. Changing any of these is a
+# methodology PR (PLAN.md §3-4, AGENTS.md) — never a data or subnet PR.
+frozen_globals:
+  K_SAT:       {value: 0.05, units: months of stock (Michaelis-Menten k), frozen: true, <<: *sess}
+  ALPHA:       {value: 0.06, units: 1/month capacity-rebuild gain, frozen: true,
+                fitted_on: neon_2022, <<: *sess}
+  HORIZON:     {value: 6.0, units: months of runway, frozen: true, <<: *sess}
+  utilization: {value: 0.90, units: fraction (pre-shock calibration rule), frozen: true, <<: *sess}

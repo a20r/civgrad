@@ -1,0 +1,13 @@
+# Declared-but-unexpanded subnet: interface + contract only (PLAN.md §1).
+# Expanding this oracle is a subnet PR: match the port places exactly, ship at
+# least one historical event, pass the full gate (PLAN.md §2-3).
+name: wafer_supply
+oracle_transition: ORACLE_WaferSupply
+status: unexpanded
+region: japan
+ports:
+  outputs: [Wafers_advanced]
+  inputs: []
+contract: "polysilicon -> ingot -> wafer (Shin-Etsu/SUMCO ~50%)"
+participates_in: [tohoku_2011]       # the 2011 holdout hits this interface
+parameters: none quantified — all fog (see fog/priority.py)
