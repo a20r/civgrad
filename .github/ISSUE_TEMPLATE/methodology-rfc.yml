@@ -1,0 +1,72 @@
+# Methodology RFC template (PLAN.md §4): the only sanctioned path for changing
+# frozen parameters, model equations, or the validation protocol.
+name: Methodology RFC
+description: Propose a change to frozen parameters, model equations, or the validation protocol (PLAN.md §4)
+title: "RFC: <short name of the change>"
+labels: ["rfc"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The methodology is versioned like a spec ([METHODOLOGY.md](../blob/main/METHODOLOGY.md)) and changed
+        **only by RFC**. The implementing change is a *methodology PR*: it re-runs the **entire** validation
+        suite from scratch — all events, training events included, re-fit and re-frozen — so methodology
+        drift cannot quietly overfit event by event. Frozen parameters (`K_SAT`, `ALPHA`, `HORIZON`, the
+        90%-utilization rule) and model equations must never change in a data or subnet PR (AGENTS.md rule 2).
+  - type: textarea
+    id: proposed-change
+    attributes:
+      label: Proposed change
+      description: >-
+        What changes — equations, frozen parameters, protocol, or metrics. Be precise about what
+        becomes endogenous, what stays frozen, and what gets re-fit on which training event.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Motivating historical evidence
+      description: >-
+        Which documented events or records motivate this change, with sources. Evidence motivates the
+        mechanism; it is never a fitting target (AGENTS.md rule 3).
+    validations:
+      required: true
+  - type: textarea
+    id: scorecard-movement
+    attributes:
+      label: Scorecard entries expected to move
+      description: >-
+        Every affected SCORECARD.md row with its expected before -> after, registered here BEFORE any
+        replay runs. Rows not listed must not move; if they do, the methodology PR is rejected as a
+        regression.
+      placeholder: |
+        | entry | now | expected after |
+        |---|---|---|
+        | sumitomo_1993 (v1 adaptive) | xfail: 57.6% dip, never recovers | pass band (dip 0-30%, recovery <=6mo) |
+    validations:
+      required: true
+  - type: textarea
+    id: new-parameters
+    attributes:
+      label: New parameters and provenance plan
+      description: >-
+        Every new parameter needs {value, units, source, confidence, date} in the map — no source,
+        no merge. Confidence grades are assigned by reviewers, not authors.
+  - type: checkboxes
+    id: discipline
+    attributes:
+      label: Methodology discipline
+      options:
+        - label: >-
+            The implementing PR will re-run the full validation suite from scratch (training events
+            re-fit, globals re-frozen) and bump METHODOLOGY.md's version.
+          required: true
+        - label: >-
+            Any xfail status change (e.g. sumitomo_1993 starting to pass) is made consciously in the
+            event yaml as part of the PR, with the CI METHODOLOGY-LEVEL EVENT banner acknowledged in
+            the PR description.
+          required: true
+        - label: >-
+            Predictions for every moved scorecard entry are registered in the PR description before
+            the maintainer runs the replay.
+          required: true

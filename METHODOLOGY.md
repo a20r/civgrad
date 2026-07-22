@@ -4,7 +4,8 @@
 
 This document is versioned like a spec and changed only by RFC (PLAN.md §4):
 an issue stating the proposed change, the historical evidence motivating it,
-and which scorecard entries it is expected to move. A methodology change
+and which scorecard entries it is expected to move — file one with the
+"Methodology RFC" issue template. A methodology change
 re-runs the **entire** validation suite from scratch — all events, training
 events included, re-fit and re-frozen — so methodology drift cannot quietly
 overfit event by event. Licensed CC BY 4.0 (see LICENSE-DOCS).
