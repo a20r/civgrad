@@ -1,0 +1,32 @@
+# CI for models (PLAN.md §3): a PR merges only if every previously-passing
+# historical replay still passes (dip and recovery inside its acceptance band)
+# and every xfail entry still fails. validation/runner.py exits 1 on:
+#   - REGRESSION: a `status: pass` event leaving its band
+#   - UNEXPECTED PASS: an xfail event (Sumitomo) entering its band — a
+#     methodology-level event that must be reviewed loudly, never silently
+#     accepted (see validation/events/sumitomo_1993.yaml)
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps (jax pinned to the regression-oracle version)
+        run: pip install -r requirements.txt
+      - name: Replay all events, regenerate scorecard, enforce gates
+        run: python3 -m validation.runner
+      - name: Scorecard must be committed fresh (the honesty artifact ships with the change)
+        run: |
+          git diff --exit-code SCORECARD.md || {
+            echo "::error::SCORECARD.md is stale. Run 'python3 -m validation.runner' and commit the regenerated scorecard (PLAN.md §3)."
+            exit 1
+          }

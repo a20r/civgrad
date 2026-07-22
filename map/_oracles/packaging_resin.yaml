@@ -1,0 +1,25 @@
+# Declared-but-unexpanded subnet: interface + contract only (PLAN.md §1).
+# Expanding this oracle is a subnet PR: match the port places exactly, ship at
+# least one historical event, pass the full gate (PLAN.md §2-3).
+#
+# THIS ORACLE WAS OPENED BY A FAILING TEST. It does not exist in core/net.py
+# yet: the 1993 Sumitomo replay (validation/events/sumitomo_1993.yaml, status
+# xfail — missed twice) showed that packaging-materials supply and the
+# demand/allocation response around it are exactly what the model cannot see.
+name: packaging_resin
+oracle_transition: null              # PROPOSED — not yet wired into core/net.py
+status: proposed
+opened_by: sumitomo_1993             # the documented miss (see SCORECARD.md)
+region: japan
+ports:
+  outputs: [Packaging_resin]         # proposed new place, to be consumed by Package
+  inputs: []
+contract: >-
+  PROPOSED (no contract string in core/net.py yet): epoxy molding compound /
+  packaging-materials supply feeding the Package transition — the 1993
+  Sumitomo Chemical plant was ~60% of world supply (see the event yaml).
+  The expansion should give Package a consumable resin input so
+  packaging-materials shocks become representable, and should be designed
+  together with the demand/allocation RFC (PLAN.md §6.4) that the Sumitomo
+  hysteresis motivates.
+parameters: none quantified — all fog (see fog/priority.py)

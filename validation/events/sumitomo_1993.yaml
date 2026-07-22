@@ -1,0 +1,52 @@
+# Frozen event definition — documented facts only. Do not tune to fit.
+#
+# THIS EVENT IS A DOCUMENTED MISS (status: xfail) — the honesty artifact of
+# PLAN.md §3. Do not tune anything to make it pass. If it ever starts passing,
+# that is a methodology-level event: the runner flags it loudly and fails CI so
+# the change gets reviewed as a methodology PR, never silently accepted.
+name: sumitomo_1993
+title: "1993 Sumitomo Chemical epoxy-resin plant explosion (chip packaging)"
+short: "1993 Sumitomo (packaging)"
+year: 1993
+order: 2
+role: holdout
+status: xfail
+
+transition: Package
+capacity_lost: 0.60     # the plant supplied ~60% of world epoxy molding compound
+                        # for chip packaging
+ramp_tau_months: 6.0    # imposed-tau protocol only
+shock_month: 6.0
+buffers:
+  Chips: 1.5            # ~6 weeks of packaged/unpackaged chip inventory
+observable: delivered   # the pain was in DELIVERED chips (price), not fab starts
+
+history: "price spike, brief pain, no catastrophe"
+sources: []             # citations still needed — facts as recorded in the design
+                        # session (docs/TRANSCRIPT.md); provenance rule in AGENTS.md
+
+expected:
+  dip_pct: 15           # "price spike, brief pain" -> real but bounded dip (0-30%)
+  recovery_months: 3    # "brief" -> normalized within ~6 months
+  tolerance: {dip_pct: 15, recovery_months: 3}
+band_note: >-
+  Round-number encoding of "price spike, brief pain, no catastrophe", written
+  before statuses were computed; not a measured statistic. Note the band floor
+  is 0% dip: history records real pain, so a model that shows nothing at all
+  misses too.
+
+xfail_reason: >-
+  The model misses this event twice, in opposite directions. Protocol v0
+  (imposed-tau, observing fab flow) shows dip ~0%: packaging halts do not stop
+  fabs, so through the fab observable the event is invisible — the
+  wrong-observable failure from the design history. Protocol v1 (adaptive,
+  observing delivered flow) shows a ~58% dip with no recovery inside the
+  72-month horizon — a hysteresis trap: the adaptation law rebuilds capacity,
+  but the price-mediated demand reallocation that pulled the real system back
+  in months does not exist in the model. This is the failing test that
+  motivates the demand/allocation RFC (PLAN.md §6.4) and opened the
+  packaging_resin oracle (map/_oracles/packaging_resin.yaml).
+
+baseline_v0_1:
+  tau_replay: {dip_pct: -1.7, recovery_months: 0}
+  adaptive:   {dip_pct: 57.6, recovery_months: .inf}

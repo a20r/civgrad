@@ -1,0 +1,32 @@
+# Frozen event definition — documented facts only. Do not tune to fit.
+name: tohoku_2011
+title: "2011 Tohoku earthquake (advanced wafer supply)"
+short: "2011 Tohoku (wafers)"
+year: 2011
+order: 1
+role: holdout
+status: pass
+
+transition: WaferSupply
+capacity_lost: 0.25     # quake + outages hit a quarter of advanced wafer output
+ramp_tau_months: 4.0    # imposed-tau protocol only: plants restarted within months
+shock_month: 6.0
+buffers:
+  Wafers: 2.0           # ~2 months of wafer inventory in the pipeline
+observable: fab
+
+history: "minor global impact"
+sources: []             # citations still needed — facts as recorded in the design
+                        # session (docs/TRANSCRIPT.md); provenance rule in AGENTS.md
+
+expected:
+  dip_pct: 0            # "minor global impact" -> shallow dip
+  recovery_months: 0    # ...and quick normalization
+  tolerance: {dip_pct: 10, recovery_months: 6}
+band_note: >-
+  Round-number encoding of "minor global impact", written before statuses were
+  computed; not a measured statistic.
+
+baseline_v0_1:
+  tau_replay: {dip_pct: -1.7, recovery_months: 0}
+  adaptive:   {dip_pct: -0.6, recovery_months: 0}

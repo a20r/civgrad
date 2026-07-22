@@ -1,0 +1,5 @@
+# jax is pinned to the version the regression oracle was captured under
+# (validation/baseline_outputs.txt). Bumping it is allowed only if the runner
+# still exits 0 and any numeric drift is called out explicitly in the PR.
+jax==0.10.2
+pyyaml

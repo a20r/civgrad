@@ -1,0 +1,11 @@
+# map/semiconductors/events.yaml — historical replays this subnet participates in.
+# The frozen facts live in validation/events/*.yaml; this is a participation
+# index (PLAN.md §1). A subnet PR must ship at least one event it participates
+# in (PLAN.md §2).
+subnet: semiconductors
+events:
+  - neon_2022
+  - tohoku_2011
+  - sumitomo_1993
+  - photoresist_2019
+  - chip_crunch_2021

@@ -1,5 +1,5 @@
 """
-gsc_adapt.py — endogenous adaptation: capacity responds to scarcity.
+core/adaptation.py — endogenous adaptation: capacity responds to scarcity.
 
 Replaces the imposed recovery curve (tau) with a control law:
     scarcity_p = relu(x_ref_p - x_p) / x_ref_p          (stock below reference)
@@ -8,27 +8,26 @@ Replaces the imposed recovery curve (tau) with a control law:
 Recovery time is now EMERGENT. ALPHA is fitted once on the neon training
 event, then FROZEN for the holdouts. Disruptions are pure impulses:
 capacity is destroyed at t0 and only the adaptation law rebuilds it.
+
+Ported unchanged from gsc_adapt.py — validation/baseline_outputs.txt is the
+regression oracle. `python3 -m core.adaptation` reproduces the baseline demo,
+including the ALPHA fitting sweep on the training event.
 """
 
 import jax
 import jax.numpy as jnp
-from gsc_grad import Pre, Post, TRANSITIONS, PLACES, P, T_IDX, NT, NP_, flows, cap0
+
+from core.continuous import (Pre, Post, TRANSITIONS, PLACES, P, T_IDX, NT, NP_,
+                             flows, cap0, burn_in)
 
 DT = 0.1          # 1 unit = 1 month
 HORIZON = 6.0     # forward-looking planning horizon (months of runway)
+                  # FROZEN global parameter: change only via a methodology PR (AGENTS.md).
 FAB = T_IDX["Fab"]
 SHIP = T_IDX["Ship_Strait"]
 
 # out_mask[i, p] = 1 if transition i produces place p
 OUT = (Post > 0).astype(jnp.float64)
-
-
-def burn_in(cap, x0, months=48):
-    x = x0
-    for _ in range(int(months / DT)):
-        v = flows(x, cap)
-        x = jnp.clip(x + DT * ((Post - Pre).T @ v), 0.0)
-    return x, float(flows(x, cap)[FAB])
 
 
 def simulate(cap_base, x0, x_ref, tidx, kill, alpha, t0=6.0, months=72):
@@ -88,6 +87,11 @@ for pn in ["Ne_purified", "Wafers", "Ga_refined", "Chips", "Pkg"]:
     X_JIT = X_JIT.at[P[pn]].set(0.5 * F)
 X_REF = X_JIT  # reference = normal JIT operating stocks
 
+# Fitted on the neon training event (see the sweep in __main__), then FROZEN
+# for all holdouts. Change only via a methodology PR (AGENTS.md).
+ALPHA = 0.06
+
+
 def run(buffer_place, buffer_months, tidx, kill, alpha, observe="fab"):
     x0 = X_JIT.at[P[buffer_place]].set(buffer_months * F)
     fab, ship = simulate(c, x0, X_REF, T_IDX[tidx], kill, alpha)
@@ -102,7 +106,6 @@ if __name__ == "__main__":
         d, r = run("Ne_purified", 0.5, "Purify_Ne", 0.5, a)
         print(f"   alpha={a:.2f}: counterfactual dip {100*d:5.1f}%, recovery {r:5.1f}mo")
 
-    ALPHA = 0.06
     d, r = run("Ne_purified", 6.0, "Purify_Ne", 0.5, ALPHA)
     print(f"\n   ALPHA frozen at {ALPHA}")
     print(f"   neon WITH 6mo stockpile: dip {100*d:.1f}%, recovery "
