@@ -1,5 +1,10 @@
 # AGENT_PROMPT — civgrad repo bootstrap
 
+> **Archival note (2026-07-22).** These are the bootstrap instructions this
+> repo was built from, kept for provenance; they were executed on this date.
+> For ongoing work the operative guidance is AGENTS.md, and PLAN.md remains
+> the authoritative plan.
+
 You are setting up a public research repo from a handoff zip. The zip contains
 working code, a plan, and design history. Your job is structure, tooling, and
 documentation — NOT modeling. Follow PLAN.md exactly; where this prompt and
