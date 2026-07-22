@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "civgrad: a differentiable, hierarchical Petri net of the global supply chain"
+authors:
+  - family-names: Wallar
+    given-names: Alex
+repository-code: "https://github.com/a20r/civgrad"
+url: "https://a20r.github.io/civgrad/"
+license: Apache-2.0
+version: 0.1.0
+date-released: "2026-07-22"
+keywords:
+  - supply chains
+  - resilience
+  - Petri nets
+  - differentiable simulation
+  - JAX
+abstract: >-
+  A differentiable, hierarchical Petri net of the global supply chain:
+  discrete structural analyses (single points of failure, deadlock and
+  livelock detection), a JAX fluid relaxation with capacity/stockpile
+  gradients over a disruption prior, an adaptation law that makes recovery
+  time emergent, and a frozen historical-replay validation protocol whose
+  public scorecard shows its misses as prominently as its hits.

@@ -21,7 +21,9 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install deps (jax pinned to the regression-oracle version)
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt pytest
+      - name: Core invariants (conservation, reachability, adaptation regression)
+        run: python3 -m pytest -q tests/
       - name: Replay all events, regenerate scorecard, enforce gates
         run: python3 -m validation.runner
       - name: Scorecard must be committed fresh (the honesty artifact ships with the change)
