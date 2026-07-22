@@ -1,0 +1,41 @@
+# Frozen event definition — documented facts only. Do not tune to fit.
+name: photoresist_2019
+title: "2019 Japan-Korea photoresist export curbs (analog replay)"
+short: "2019 photoresist (analog)"
+year: 2019
+order: 3
+role: holdout
+status: pass
+
+# Analog mapping: photoresist is not a place in the v0.1 net; the purification
+# chokepoint is the structural analog (single upstream feed into Fab).
+transition: Purify_Ne
+capacity_lost: 0.15     # REALIZED loss: approvals continued, actual disruption small
+feared_capacity_lost: 0.90   # Japan supplied ~90%: what the fear implied
+ramp_tau_months: 1.0    # imposed-tau protocol only: individual licences resumed fast
+shock_month: 6.0
+buffers:
+  Ne_purified: 2.0      # ~2 months of inventory
+observable: fab
+
+history: "non-event"
+sources: []             # citations still needed — facts as recorded in the design
+                        # session (docs/TRANSCRIPT.md); provenance rule in AGENTS.md
+
+tau_replay:             # protocol-v0 inputs where they differ from the defaults:
+  capacity_lost: 0.90   # v0 replayed the FEARED fraction (the "analog" row) with
+                        # the fast ramp — reproduced as the scored v0 row
+
+expected:
+  dip_pct: 0            # "non-event"
+  recovery_months: 0
+  tolerance: {dip_pct: 5, recovery_months: 3}
+band_note: >-
+  Round-number encoding of "non-event", written before statuses were computed;
+  not a measured statistic. The adaptive protocol scores the realized (~15%)
+  replay; the feared (90%) adaptive replay is an unscored counterfactual.
+
+baseline_v0_1:
+  tau_replay:        {dip_pct: -1.9, recovery_months: 0}
+  adaptive:          {dip_pct: -0.7, recovery_months: 0}
+  adaptive_feared:   {dip_pct: 64.0, recovery_months: 13.7}

@@ -1,0 +1,43 @@
+# Frozen event definition — documented facts only. Do not tune to fit.
+# Field semantics: see validation/runner.py docstring.
+name: neon_2022
+title: "2022 neon shock (Russia-Ukraine war: Ingas + Cryoin halt)"
+short: "2022 neon shock"
+year: 2022
+order: 0
+role: training          # ALPHA and the calibration rule were set on this event
+status: pass
+
+transition: Purify_Ne
+capacity_lost: 0.5      # Ingas (Mariupol) + Cryoin (Odesa): ~half of world
+                        # semiconductor-grade neon purification CAPACITY (not stock)
+ramp_tau_months: 9.0    # imposed-tau protocol only: alternative purification
+                        # (China, Linde, POSCO) ramped over ~12-18 months
+shock_month: 6.0
+buffers:
+  Ne_purified: 6.0      # chipmakers held ~6mo stockpiles — the 2014 Crimea lesson
+counterfactual_buffer_months: 0.5   # lean/JIT counterfactual (not scored)
+observable: fab
+
+history: "no fab stoppages; supply normalized ~12-18mo"
+history_note: >-
+  No major fab stoppages were attributed to neon; chipmakers had built ~6-month
+  stockpiles after the 2014 Crimea price spike. Alternative purification
+  capacity ramped over roughly 12-18 months.
+sources: []             # citations still needed — facts as recorded in the design
+                        # session (docs/TRANSCRIPT.md); provenance rule in AGENTS.md
+
+expected:               # acceptance band encoding the historical record, applied
+                        # to the stockpiled (historical) replay in both protocols
+  dip_pct: 0            # "no fab stoppages" -> dip indistinguishable from zero
+  recovery_months: 15   # "normalized ~12-18mo" -> minimum/normalization inside ~0-30mo
+  tolerance: {dip_pct: 5, recovery_months: 15}
+band_note: >-
+  The band is a round-number encoding of the qualitative record above, written
+  before statuses were computed; it is not a measured statistic. With a ~0% dip
+  the 95%-recovery metric degenerates to time-of-minimum, hence the wide
+  recovery band.
+
+baseline_v0_1:          # informational: frozen v0.1 model outputs (regression context)
+  tau_replay: {dip_pct: 0.1, recovery_months: 16}
+  adaptive:   {dip_pct: -0.7, recovery_months: 0}

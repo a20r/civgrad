@@ -1,0 +1,19 @@
+# Frozen event definition — documented facts only.
+#
+# OUT OF SCOPE: this is a demand-side event and the v0.1 model has no demand
+# dynamics or price-mediated allocation. It is listed (not simulated) so the
+# scorecard is honest about the scope boundary — see PLAN.md §4.5 and the
+# demand/allocation RFC (PLAN.md §6.4).
+name: chip_crunch_2021
+title: "2020-21 chip crunch (demand-side)"
+short: "2020-21 chip crunch"
+year: 2021
+order: 4
+role: holdout
+status: out-of-scope
+scope_reason: "no demand dynamics"
+
+observable: delivered
+history: "demand surge + ordering whiplash while fab capacity stayed intact; shortages persisted ~2 years"
+sources: []             # citations still needed — facts as recorded in the design
+                        # session (docs/TRANSCRIPT.md); provenance rule in AGENTS.md

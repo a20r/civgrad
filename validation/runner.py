@@ -1,32 +1,36 @@
 """
 validation/runner.py — historical replay engine (port of gsc_validate.py).
 
-1. HISTORICAL VALIDATION: replay the 2022 neon shock.
-   Feb 2022: Ingas (Mariupol) + Cryoin (Odesa) halt — roughly half of the
-   world's semiconductor-grade neon purification CAPACITY (not stock).
-   Historical record to match:
-     - no major fab stoppages attributed to neon (chipmakers held ~6mo
-       stockpiles, a lesson learned from the 2014 Crimea price spike)
-     - alternative purification (China, Linde, POSCO) ramped over ~12-18mo
-   Model: kill 50% of Purify_Ne capacity at t=6mo, capacity recovers with
-   time constant tau=9mo. Compare WITH vs WITHOUT the 6-month stockpile.
-   Validation = (a) dip is shallow with stockpile, (b) deep without,
-   (c) recovery inside ~18 months.
+Event definitions are DATA: validation/events/*.yaml hold the documented
+facts of each historical event (transition hit, capacity lost, buffers,
+observable, one-line record, acceptance band). This module holds the frozen
+replay protocols and never hardcodes event facts.
+
+1. HISTORICAL VALIDATION: replay the 2022 neon shock (training event).
+   Kill capacity_lost of the event's transition at shock_month; capacity
+   recovers with the event's documented ramp tau. Compare WITH vs WITHOUT
+   the historical stockpile.
 
 2. EXPECTED-THROUGHPUT GRADIENT: loss = sum_s p_s * throughput(scenario_s)
    over a distribution of disruptions (core/gradients.py).
 
-3. FROZEN-PROTOCOL HOLDOUTS: structure, K_SAT, and the 90%-utilization rule
-   are FROZEN (set during the neon training event). Per-event inputs are
-   documented historical facts, not tuned.
+3. FROZEN-PROTOCOL HOLDOUTS (protocol v0, imposed-tau): structure, K_SAT,
+   and the 90%-utilization rule are FROZEN (set during the neon training
+   event). Per-event inputs come from the event yamls — documented
+   historical facts, not tuned. Protocol v0 observes fab flow; where a
+   yaml carries a `tau_replay` block, those inputs override (e.g. the
+   photoresist analog replays the feared fraction).
 
 Time units: 1.0 = one month. DT = 0.1 month.
 `python3 -m validation.runner` reproduces the gsc_validate.py baseline
 (see validation/baseline_outputs.txt).
 """
 
+from pathlib import Path
+
 import jax
 import jax.numpy as jnp
+import yaml
 
 from core.continuous import (Pre, Post, TRANSITIONS, PLACES, P, T_IDX, NT, NP_,
                              flows, cap0, burn_in, simulate_recovery)
@@ -35,6 +39,21 @@ from core.gradients import expected_throughput
 DT = 0.1
 MONTHS = 72
 FAB = T_IDX["Fab"]
+
+EVENTS_DIR = Path(__file__).resolve().parent / "events"
+
+
+def load_events():
+    """All event yamls, sorted by their `order` field."""
+    events = []
+    for f in sorted(EVENTS_DIR.glob("*.yaml")):
+        with open(f) as fh:
+            events.append(yaml.safe_load(fh))
+    return sorted(events, key=lambda e: e["order"])
+
+
+def simulatable(events):
+    return [e for e in events if e["status"] != "out-of-scope"]
 
 
 def dip_and_recovery(traj, t0):
@@ -53,30 +72,33 @@ def dip_and_recovery(traj, t0):
 
 # ---------------- 1. neon shock replay (training event) ----------------
 
-def calibrate_neon_v0():
+def calibrate_neon_v0(ev):
     """Purification runs at ~90% utilization pre-shock (just-in-time);
     stocks don't accumulate — impose them. Lean = ~2wks buffer."""
+    lean_months = ev["counterfactual_buffer_months"]
+    stock_months = ev["buffers"]["Ne_purified"]
     x_ss, F_star = burn_in(cap0, jnp.full(NP_, 1.0))
-    cap_cal = cap0.at[T_IDX["Purify_Ne"]].set(F_star / 0.90)
+    cap_cal = cap0.at[T_IDX[ev["transition"]]].set(F_star / 0.90)
     x_ss, F_star = burn_in(cap_cal, x_ss)   # re-equilibrate under calibrated cap
-    x_ss         = x_ss.at[P["Ne_purified"]].set(0.5 * F_star)
-    x_stockpiled = x_ss.at[P["Ne_purified"]].set(6.0 * F_star)   # post-2014 lesson
+    x_ss         = x_ss.at[P["Ne_purified"]].set(lean_months * F_star)
+    x_stockpiled = x_ss.at[P["Ne_purified"]].set(stock_months * F_star)  # post-2014 lesson
     x_lean       = x_ss
     return cap_cal, x_stockpiled, x_lean, F_star
 
 
-NEON = dict(tidx=T_IDX["Purify_Ne"], kill=0.5, tau=9.0, t0=6.0)
-
-
-def neon_section(cap_cal, x_stockpiled, x_lean, F_star):
-    print(f"== 2022 neon shock replay ==")
+def neon_section(ev, cap_cal, x_stockpiled, x_lean, F_star):
+    shock = dict(tidx=T_IDX[ev["transition"]], kill=ev["capacity_lost"],
+                 tau=ev["ramp_tau_months"], t0=ev["shock_month"])
+    print(f"== {ev['year']} neon shock replay ==")
     print(f"(steady-state fab flow {F_star:.3f}, purify utilization 90%;")
-    print(f" 50% purification capacity lost, alt-supply tau=9mo)\n")
+    print(f" {round(100*shock['kill'])}% purification capacity lost, "
+          f"alt-supply tau={shock['tau']:.0f}mo)\n")
     results = {}
-    for label, key, x0 in [("WITH ~6mo stockpile (history)", "stockpiled", x_stockpiled),
+    stock_months = ev["buffers"]["Ne_purified"]
+    for label, key, x0 in [(f"WITH ~{stock_months:.0f}mo stockpile (history)", "stockpiled", x_stockpiled),
                            ("WITHOUT stockpile (counterfactual)", "lean", x_lean)]:
-        _, traj = simulate_recovery(cap_cal, x0, **NEON)
-        dip, rec = dip_and_recovery(traj, NEON["t0"])
+        _, traj = simulate_recovery(cap_cal, x0, **shock)
+        dip, rec = dip_and_recovery(traj, shock["t0"])
         results[key] = (dip, rec)
         print(f"   {label}:")
         print(f"      throughput dip: {100*dip:5.1f}%   recovery to 95%: {rec:.0f} months")
@@ -120,37 +142,43 @@ def calibrate_frozen():
     return c, xs, F
 
 
-EVENTS = [
-    ("2011 Tohoku (wafers)",        "WaferSupply", 0.25, 4.0,  "Wafers",      2.0,
-     "history: minor global impact"),
-    ("1993 Sumitomo (packaging)",   "Package",     0.60, 6.0,  "Chips",       1.5,
-     "history: price spike, brief pain, no catastrophe"),
-    ("2019 photoresist (analog)",   "Purify_Ne",   0.90, 1.0,  "Ne_purified", 2.0,
-     "history: non-event"),
-]
+def v0_inputs(ev):
+    """Protocol-v0 replay inputs for an event: yaml facts, with any
+    `tau_replay` overrides applied (e.g. photoresist replays the feared
+    fraction). Returns (kill, tau, buffers, t0)."""
+    over = ev.get("tau_replay") or {}
+    kill = over.get("capacity_lost", ev["capacity_lost"])
+    return kill, ev["ramp_tau_months"], ev["buffers"], ev["shock_month"]
 
 
-def frozen_replay():
+def frozen_replay(events):
     c, xs, F = calibrate_frozen()
     print("\n== FROZEN-PROTOCOL HOLDOUT REPLAYS ==")
     print(f"(calibrated steady-state fab flow {F:.3f}; no per-event tuning)\n")
     results = {}
-    for name, tname, kill, tau, bplace, bmonths, hist in EVENTS:
-        x0 = xs.at[P[bplace]].set(bmonths * F)
-        _, traj = simulate_recovery(c, x0, T_IDX[tname], kill, tau, t0=6.0)
-        dip, rec = dip_and_recovery(traj, 6.0)
-        results[name] = (dip, rec)
+    for ev in events:
+        kill, tau, buffers, t0 = v0_inputs(ev)
+        x0 = xs
+        for bplace, bmonths in buffers.items():
+            x0 = x0.at[P[bplace]].set(bmonths * F)
+        _, traj = simulate_recovery(c, x0, T_IDX[ev["transition"]], kill, tau, t0=t0)
+        dip, rec = dip_and_recovery(traj, t0)
+        results[ev["name"]] = (dip, rec)
         rec_s = f"{rec:.0f}mo" if rec != float("inf") else "n/a"
-        print(f"   {name}")
-        print(f"      model: dip {100*dip:5.1f}%, recovery {rec_s:>5}   | {hist}")
+        print(f"   {ev['short']}")
+        print(f"      model: dip {100*dip:5.1f}%, recovery {rec_s:>5}   | history: {ev['history']}")
     return results
 
 
 def main():
-    cap_cal, x_stockpiled, x_lean, F_star = calibrate_neon_v0()
-    neon_section(cap_cal, x_stockpiled, x_lean, F_star)
+    events = load_events()
+    neon = next(e for e in events if e["role"] == "training")
+    holdouts = [e for e in simulatable(events) if e["role"] == "holdout"]
+
+    cap_cal, x_stockpiled, x_lean, F_star = calibrate_neon_v0(neon)
+    neon_section(neon, cap_cal, x_stockpiled, x_lean, F_star)
     expected_gradient_section(cap_cal, x_stockpiled)
-    frozen_replay()
+    frozen_replay(holdouts)
 
 
 if __name__ == "__main__":
