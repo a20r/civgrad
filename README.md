@@ -8,6 +8,11 @@ A differentiable, hierarchical Petri net of the global supply chain. Goal:
 locate where marginal investment buys the most marginal resilience — and make
 the map improvable by the people who actually know each territory.
 
+**Essay + live demo:** <https://a20r.github.io/civgrad/> — the living essay
+(`essay/essay.md`, v0.1 scaffold) with the adaptive model running in the
+browser, deployed from `site/` on every merge to `main` (no build step; the
+JS port is CI-checked against the Python scorecard).
+
 The model is three layers over one net (currently: a semiconductor slice with
 oracles at every frontier):
 
