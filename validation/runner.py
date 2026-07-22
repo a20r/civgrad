@@ -334,7 +334,7 @@ def build_scorecard(events, scored, counterfactuals):
     for ev in events:
         if ev["status"] == "out-of-scope":
             md.append(f"- **{ev['title']}** — {ev['history']}. Out of scope: "
-                      f"{ev['scope_reason']}; see the demand/allocation RFC (PLAN.md §6.4).")
+                      f"{ev['scope_reason']}; see the demand/allocation work (PLAN.md §5).")
     md.append("")
     md.append("## Counterfactuals (informational, never scored)\n")
     md.append("| replay | protocol | model dip | model recovery | note |")

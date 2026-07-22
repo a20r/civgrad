@@ -1,13 +1,11 @@
 # civgrad methodology
 
-`version: 0.1 — skeleton; expanded by RFC`
+`version: 0.1 — skeleton`
 
-This document is versioned like a spec and changed only by RFC (PLAN.md §4):
-an issue stating the proposed change, the historical evidence motivating it,
-and which scorecard entries it is expected to move. A methodology change
-re-runs the **entire** validation suite from scratch — all events, training
-events included, re-fit and re-frozen — so methodology drift cannot quietly
-overfit event by event. Licensed CC BY 4.0 (see LICENSE-DOCS).
+This document is versioned like a spec (PLAN.md §4): methodology changes bump
+the version here and re-run **all** validation from scratch — every event,
+training events included, re-fit and re-frozen — so methodology drift cannot
+quietly overfit event by event. Licensed CC BY 4.0 (see LICENSE-DOCS).
 
 ## 1. Why Petri nets
 
@@ -31,8 +29,8 @@ so the frontier of our ignorance is explicit and machine-readable
 (the Zeiss optics monopoly sits a level deeper than ASML) and, symmetrically,
 sources with no upstream constraint acted as infinite faucets that made
 everything look rebuildable. Expanding an oracle is the highest-value
-contribution (PLAN.md §2), and `fog/priority.py` ranks which expansion is
-worth the most.
+contribution (PLAN.md §2); `map/_oracles/README.md` lists each frontier and
+what expanding it would test.
 
 ## 3. Continuous relaxation and differentiability
 
@@ -57,8 +55,8 @@ frozen (`core/adaptation.py`). What is endogenous: recovery time. What is
 not yet endogenous: **price-mediated allocation** — who gets the scarce
 intermediate while it is scarce. The Sumitomo hysteresis (57.6% dip, no
 recovery, vs. "brief pain" in history) is the open failing test that marks
-this boundary, kept red on the scorecard until the demand/allocation RFC
-(PLAN.md §6.4) resolves it honestly.
+this boundary, kept red on the scorecard until demand/allocation dynamics
+(PLAN.md §5) resolve it honestly.
 
 ## 5. Validation protocol
 
@@ -81,9 +79,9 @@ so *where fragility concentrates* is more trustworthy than *how bad it gets*.
    inputs; tied to the same miss; opens `map/_oracles/packaging_resin.yaml`.
 3. **Oracle fog at every frontier** — mining, wafer supply, optics,
    fertilizer are interface-only; each hides unknown-direction error
-   (`fog/priority.py` ranks them; no replay currently crosses them).
+   (`map/_oracles/README.md` lists them; no replay currently crosses them).
 4. **Mean-only objective** — no tail/CVaR objective and no test exercising
    one (§3).
 5. **Provenance debt** — every parameter in `map/semiconductors/net.yaml` is
-   confidence C ("session estimate — needs citation"); the provenance lint
-   counts 43. Data PRs burn this down one citation at a time.
+   confidence C ("session estimate — needs citation"), 43 of them. Data PRs
+   burn this down one citation at a time.

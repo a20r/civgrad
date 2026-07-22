@@ -22,8 +22,6 @@ A differentiable, hierarchical Petri net of the global supply chain. Goal: locat
       validation/
         events/               # frozen event definitions: documented facts only
         runner.py             # CI: replays all events, regenerates SCORECARD.md
-      fog/
-        priority.py           # EVOI ranking: which oracle's uncertainty costs us most
 
 ## 2. Contribution guide (the short version)
 
@@ -56,17 +54,14 @@ A PR merges only if `validation/runner.py` shows:
   (Enforced socially + by CI comparing PR text to output; imperfect, but it makes
   post-hoc fitting visible.)
 - **Provenance lint**: every changed parameter has source + confidence; confidence-C
-  parameters trigger a fog-priority entry rather than blocking merge.
+  parameters are flagged for citation rather than blocking merge.
 - **Honesty artifact**: SCORECARD.md regenerates on merge and includes failures.
   A model whose public scorecard shows its misses (Sumitomo, twice) is the product.
 
 ## 4. The living methodology
 
-`METHODOLOGY.md` is versioned like a spec (v0.1, v0.2 …) and changed by RFC:
-an issue template stating the proposed change, what historical evidence motivates it,
-and which scorecard entries it's expected to move. Methodology changes re-run the
-*entire* validation suite from scratch — all events, including training events,
-re-fit and re-frozen — so methodology drift can't quietly overfit event by event.
+`METHODOLOGY.md` is versioned like a spec (v0.1, v0.2 …). Methodology changes
+bump the version in METHODOLOGY.md and re-run all validation from scratch.
 
 Contents (write-up order):
 1. Why Petri nets: stocks, concurrency, deadlock/livelock, conservation.
@@ -83,21 +78,12 @@ Contents (write-up order):
    (demand-side events currently out of scope).
 6. Known limits, ranked, each tied to a failing or missing test.
 
-## 5. Fog priority (expert outreach)
-
-`fog/priority.py` ranks oracles by expected value of information: contribution of
-each oracle's parameter uncertainty to variance in the headline outputs (gradient
-rankings, replay predictions). Output is a public leaderboard: "expanding
-packaging_resin is currently worth the most." Outreach then targets the top of the
-list — recruitment by demonstrated need, not enthusiasm. An oracle expansion that
-doesn't move any prediction gets deprioritized automatically, which protects
-contributors' time as much as ours.
-
-## 6. Sequencing
+## 5. Sequencing
 
 1. v0.1: port current code into the structure above; scorecard auto-generation.
 2. Methodology write-up v0.1 (the six sections; the debugging history is source material).
-3. Open two oracle bounties: packaging_resin (has a failing test) and fertilizer
-   (the food-system slice; scarier and unexplored).
-4. Demand/allocation RFC — the Sumitomo hysteresis fix; biggest known model gap.
-5. Only then: the explorable site, reading everything from this repo.
+3. Expand the next oracles when curiosity strikes: packaging_resin (it has a
+   failing test attached) and fertilizer (the food-system slice; scarier and
+   unexplored) — map/_oracles/README.md says what each expansion would test.
+4. Demand/allocation dynamics — the Sumitomo hysteresis fix; biggest known model gap.
+5. The explorable essay + demo site, reading everything from this repo.

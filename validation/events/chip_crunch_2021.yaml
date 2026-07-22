@@ -3,7 +3,7 @@
 # OUT OF SCOPE: this is a demand-side event and the v0.1 model has no demand
 # dynamics or price-mediated allocation. It is listed (not simulated) so the
 # scorecard is honest about the scope boundary — see PLAN.md §4.5 and the
-# demand/allocation RFC (PLAN.md §6.4).
+# demand/allocation work (PLAN.md §5).
 name: chip_crunch_2021
 title: "2020-21 chip crunch (demand-side)"
 short: "2020-21 chip crunch"

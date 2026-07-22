@@ -20,6 +20,6 @@ contract: >-
   Sumitomo Chemical plant was ~60% of world supply (see the event yaml).
   The expansion should give Package a consumable resin input so
   packaging-materials shocks become representable, and should be designed
-  together with the demand/allocation RFC (PLAN.md §6.4) that the Sumitomo
+  together with the demand/allocation work (PLAN.md §5) that the Sumitomo
   hysteresis motivates.
-parameters: none quantified — all fog (see fog/priority.py)
+parameters: none quantified — all fog

@@ -4,11 +4,11 @@
 name: fertilizer
 oracle_transition: ORACLE_Fertilizer
 status: unexpanded
-next_slice: true                     # PLAN.md §6.3: open bounty — the food-system
-                                     # slice; scarier and unexplored
+next_slice: true                     # PLAN.md §5: the food-system slice —
+                                     # scarier and unexplored
 region: morocco
 ports:
   outputs: []                        # interface to be declared when the slice opens;
   inputs: []                         # no port places wired into the semiconductor net
 contract: "phosphate/potash/Haber-Bosch subnet — food system. NEXT SLICE."
-parameters: none quantified — all fog (see fog/priority.py)
+parameters: none quantified — all fog
