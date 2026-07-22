@@ -49,7 +49,7 @@ import jax.numpy as jnp
 import yaml
 
 from core.continuous import (Pre, Post, TRANSITIONS, PLACES, P, T_IDX, NT, NP_,
-                             flows, cap0, burn_in, simulate_recovery)
+                             flows, cap0, burn_in, simulate_recovery, UTILIZATION)
 from core.gradients import expected_throughput
 
 DT = 0.1
@@ -94,7 +94,7 @@ def calibrate_neon_v0(ev):
     lean_months = ev["counterfactual_buffer_months"]
     stock_months = ev["buffers"]["Ne_purified"]
     x_ss, F_star = burn_in(cap0, jnp.full(NP_, 1.0))
-    cap_cal = cap0.at[T_IDX[ev["transition"]]].set(F_star / 0.90)
+    cap_cal = cap0.at[T_IDX[ev["transition"]]].set(F_star / UTILIZATION)
     x_ss, F_star = burn_in(cap_cal, x_ss)   # re-equilibrate under calibrated cap
     x_ss         = x_ss.at[P["Ne_purified"]].set(lean_months * F_star)
     x_stockpiled = x_ss.at[P["Ne_purified"]].set(stock_months * F_star)  # post-2014 lesson
@@ -106,7 +106,7 @@ def neon_section(ev, cap_cal, x_stockpiled, x_lean, F_star):
     shock = dict(tidx=T_IDX[ev["transition"]], kill=ev["capacity_lost"],
                  tau=ev["ramp_tau_months"], t0=ev["shock_month"])
     print(f"== {ev['year']} neon shock replay ==")
-    print(f"(steady-state fab flow {F_star:.3f}, purify utilization 90%;")
+    print(f"(steady-state fab flow {F_star:.3f}, purify utilization {round(100*UTILIZATION)}%;")
     print(f" {round(100*shock['kill'])}% purification capacity lost, "
           f"alt-supply tau={shock['tau']:.0f}mo)\n")
     results = {}
@@ -150,7 +150,7 @@ def calibrate_frozen():
     for _ in range(2):                      # calibrate -> re-equilibrate -> recal
         xs, F = burn_in(c, x)
         for tname in ["Purify_Ne", "WaferSupply", "Refine_Ga"]:
-            c = c.at[T_IDX[tname]].set(F / 0.90)
+            c = c.at[T_IDX[tname]].set(F / UTILIZATION)
         x = xs
     xs, F = burn_in(c, x)
     for pname in ["Ne_purified", "Wafers", "Ga_refined", "Chips", "Pkg"]:

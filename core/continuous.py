@@ -21,9 +21,16 @@ core/adaptation.py:
 import jax
 import jax.numpy as jnp
 
+from core.map_loader import continuous_spec
+
 jax.config.update("jax_enable_x64", True)
 
-# ---------------- net definition (mirrors core/net.py) ----------------
+# ------------- net definition (loaded from map/semiconductors/net.yaml) -------------
+# The map is the source of truth for VALUES (arcs, weights, capacities, frozen
+# globals). The ordered name lists below are the ENGINE INDEX LAYOUT — they fix
+# stock/capacity vector indices (and tie-break order in ranked printouts) —
+# and are asserted against the yaml at import. Names here are the relaxation's
+# aliases of the discrete net's names (see `continuous.aliases` in the yaml).
 
 PLACES = ["Ga_byproduct", "Ga_refined", "Ne_crude", "Ne_purified",
           "EUV_tools", "EUV_optics", "EUV_worn",
@@ -31,25 +38,19 @@ PLACES = ["Ga_byproduct", "Ga_refined", "Ne_crude", "Ne_purified",
 P = {n: i for i, n in enumerate(PLACES)}
 NP_ = len(PLACES)
 
-# (name, inputs{place:w}, outputs{place:w}, reads{place})
-TRANSITIONS = [
-    ("Mine",        {},                                {"Ga_byproduct": 1, "Ne_crude": 1}, []),
-    ("WaferSupply", {},                                {"Wafers": 1},                      []),
-    ("OpticsMfg",   {},                                {"EUV_optics": 1},                  []),
-    ("Refine_Ga",   {"Ga_byproduct": 1},               {"Ga_refined": 1},                  []),
-    ("Purify_Ne",   {"Ne_crude": 1},                   {"Ne_purified": 1},                 []),
-    ("Fab",         {"Ga_refined": 1, "Ne_purified": 1,
-                     "Wafers": 1},                     {"Chips": 1},                       ["EUV_tools"]),
-    ("Package",     {"Chips": 1},                      {"Pkg": 1},                         []),
-    ("Ship_Strait", {"Pkg": 1},                        {"Goods": 1},                       []),
-    ("Consume",     {"Goods": 1},                      {"E_waste": 1},                     []),
-    ("Recycle",     {"E_waste": 1},                    {"Ga_byproduct": 1},                []),
-    ("Build_EUV",   {"Pkg": 1, "EUV_optics": 1},       {"EUV_tools": 1},                   []),
-    ("Wear_EUV",    {"EUV_tools": 1},                  {"EUV_worn": 1},                    []),
-    ("Refurb",      {"EUV_worn": 1, "Pkg": 1},         {"EUV_tools": 1},                   []),
-]
+TRANSITION_ORDER = ["Mine", "WaferSupply", "OpticsMfg", "Refine_Ga", "Purify_Ne",
+                    "Fab", "Package", "Ship_Strait", "Consume", "Recycle",
+                    "Build_EUV", "Wear_EUV", "Refurb"]
+
+_SPEC = continuous_spec(PLACES, TRANSITION_ORDER)
+
+# (name, inputs{place:w}, outputs{place:w}, reads[place]) — from the map
+TRANSITIONS = _SPEC.transitions
 NT = len(TRANSITIONS)
 T_IDX = {t[0]: i for i, t in enumerate(TRANSITIONS)}
+
+UTILIZATION = _SPEC.utilization  # pre-shock calibration rule (frozen global):
+                                 # fab-input sources run at this utilization
 
 Pre  = jnp.zeros((NT, NP_)).at[tuple(zip(*[(i, P[p]) for i, t in enumerate(TRANSITIONS) for p in t[1]]))].set(
        jnp.array([float(w) for t in TRANSITIONS for w in t[1].values()]))
@@ -57,8 +58,9 @@ Post = jnp.zeros((NT, NP_)).at[tuple(zip(*[(i, P[p]) for i, t in enumerate(TRANS
        jnp.array([float(w) for t in TRANSITIONS for w in t[2].values()]))
 Read = jnp.zeros((NT, NP_)).at[tuple(zip(*[(i, P[p]) for i, t in enumerate(TRANSITIONS) for p in t[3]]))].set(1.0)
 
-K_SAT = 0.05  # ~1.5 days of stock: JIT cliff — full flow on thin inventory
-              # FROZEN global parameter: change only via a methodology PR (AGENTS.md).
+K_SAT = _SPEC.k_sat  # ~1.5 days of stock: JIT cliff — full flow on thin inventory
+                     # FROZEN global parameter (map frozen_globals): change only
+                     # via a methodology PR (AGENTS.md).
 
 def flows(x, cap):
     """v_i = cap_i * min(input saturations) * prod(read saturations)."""
@@ -89,12 +91,10 @@ def simulate(cap, x0, kill_frac):
     return tot, xf
 
 # ---------------- baseline capacities & stocks ----------------
+# Per-transition relative flow capacities from the map (rationales — slow
+# tool builds, Zeiss scaling, wear rate, near-dead recycling — live there).
 
-cap0 = jnp.ones(NT).at[T_IDX["Build_EUV"]].set(0.03)   # tools are slow to build
-cap0 = cap0.at[T_IDX["OpticsMfg"]].set(0.03)           # Zeiss is slow to scale
-cap0 = cap0.at[T_IDX["Wear_EUV"]].set(0.15)           # tools wear ~15%/period
-cap0 = cap0.at[T_IDX["Refurb"]].set(0.2)
-cap0 = cap0.at[T_IDX["Recycle"]].set(0.05)            # near-dead loop closure
+cap0 = jnp.array(_SPEC.capacities)
 
 x0 = jnp.full(NP_, 1.0).at[P["EUV_tools"]].set(1.0)
 
