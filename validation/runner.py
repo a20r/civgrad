@@ -113,7 +113,7 @@ def neon_section(ev, cap_cal, x_stockpiled, x_lean, F_star):
     stock_months = ev["buffers"]["Ne_purified"]
     for label, key, x0 in [(f"WITH ~{stock_months:.0f}mo stockpile (history)", "stockpiled", x_stockpiled),
                            ("WITHOUT stockpile (counterfactual)", "lean", x_lean)]:
-        _, traj = simulate_recovery(cap_cal, x0, **shock)
+        _, traj = simulate_recovery(cap_cal, x0, months=MONTHS, **shock)
         dip, rec = dip_and_recovery(traj, shock["t0"])
         results[key] = (dip, rec)
         print(f"   {label}:")
@@ -177,7 +177,8 @@ def frozen_replay(events):
         x0 = xs
         for bplace, bmonths in buffers.items():
             x0 = x0.at[P[bplace]].set(bmonths * F)
-        _, traj = simulate_recovery(c, x0, T_IDX[ev["transition"]], kill, tau, t0=t0)
+        _, traj = simulate_recovery(c, x0, T_IDX[ev["transition"]], kill, tau, t0=t0,
+                                    months=MONTHS)
         dip, rec = dip_and_recovery(traj, t0)
         results[ev["name"]] = (dip, rec)
         rec_s = f"{rec:.0f}mo" if rec != float("inf") else "n/a"
@@ -194,15 +195,18 @@ OBSERVE = {"fab": "fab", "delivered": "ship"}
 def adaptive_replay(adaptation, ev, kill=None, buffers=None):
     """Replay an event under the frozen adaptation law (impulse disruption,
     emergent recovery). Equivalent to adaptation.run() for single-buffer
-    events; supports the yaml's {place: months} buffers dict."""
+    events; supports the yaml's {place: months} buffers dict and the event's
+    own shock_month/horizon rather than the module defaults."""
     kill = ev["capacity_lost"] if kill is None else kill
     buffers = ev["buffers"] if buffers is None else buffers
+    t0 = ev["shock_month"]
     x0 = adaptation.X_JIT
     for place, months in buffers.items():
         x0 = x0.at[P[place]].set(months * adaptation.F)
     fab, ship = adaptation.simulate(adaptation.c, x0, adaptation.X_REF,
-                                    T_IDX[ev["transition"]], kill, adaptation.ALPHA)
-    return adaptation.dip_recovery(fab if OBSERVE[ev["observable"]] == "fab" else ship)
+                                    T_IDX[ev["transition"]], kill, adaptation.ALPHA,
+                                    t0=t0, months=MONTHS)
+    return adaptation.dip_recovery(fab if OBSERVE[ev["observable"]] == "fab" else ship, t0)
 
 
 def adaptive_section(neon, holdouts):
@@ -273,7 +277,7 @@ def fmt_dip(dip_pct):
 
 
 def fmt_rec(rec_months):
-    return "never (72 mo horizon)" if rec_months == float("inf") else f"{rec_months:.1f} mo"
+    return f"never ({MONTHS} mo horizon)" if rec_months == float("inf") else f"{rec_months:.1f} mo"
 
 
 def build_scorecard(events, scored, counterfactuals):

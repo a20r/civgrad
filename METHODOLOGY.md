@@ -86,4 +86,4 @@ so *where fragility concentrates* is more trustworthy than *how bad it gets*.
    one (§3).
 5. **Provenance debt** — every parameter in `map/semiconductors/net.yaml` is
    confidence C ("session estimate — needs citation"); the provenance lint
-   counts 44. Data PRs burn this down one citation at a time.
+   counts 43. Data PRs burn this down one citation at a time.

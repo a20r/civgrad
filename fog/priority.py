@@ -26,9 +26,11 @@ MAP_DIR = Path(__file__).resolve().parents[1] / "map"
 
 
 def count_confidence_c(node):
-    """Count provenance dicts with confidence C in a parsed yaml tree."""
+    """Count confidence-C PARAMETER provenance dicts in a parsed yaml tree.
+    A parameter dict carries a `value` alongside its grade — this excludes
+    bare provenance templates like the `_session_estimate` anchor."""
     if isinstance(node, dict):
-        own = 1 if node.get("confidence") == "C" else 0
+        own = 1 if node.get("confidence") == "C" and "value" in node else 0
         return own + sum(count_confidence_c(v) for v in node.values())
     if isinstance(node, list):
         return sum(count_confidence_c(v) for v in node)
