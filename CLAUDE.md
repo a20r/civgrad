@@ -80,8 +80,11 @@ AGENTS.md governs; these are the load-bearing rules restated:
   any line likely to be quoted. Never merge essay prose he hasn't read.
 
 ## PR conventions
-- One branch per change; granular commits; PR description states what
-  moved and why, includes registered predictions where applicable.
-- Before pushing: `python3 -m validation.runner` clean, site regression
-  (node site/test/regression.mjs) clean once the demo exists, scorecard
-  regenerated if events changed.
+- One PR in flight at a time on the session's working branch; granular
+  commits; merge before starting the next change. PR description states
+  what moved and why, with predictions registered before running where
+  events are involved.
+- Before pushing, all four gates clean: `python3 -m validation.runner`
+  (baseline reproduces, exit 0), `python3 -m pytest -q tests/`,
+  `node site/test/regression.mjs`, and SCORECARD.md + site/data/
+  regenerated and committed if anything upstream of them changed.
