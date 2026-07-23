@@ -9,7 +9,9 @@ SCORECARD.md):
     python3 -m validation.export_site_data
 
 writes, deterministically:
-  site/data/events.json   <- validation/events/*.yaml (ordered, verbatim)
+  site/data/events.json   <- validation/events/*.yaml (ordered; parsed and
+                             re-serialized as JSON, so yaml comments and
+                             formatting are not preserved — values are)
   site/data/oracles.json  <- map/_oracles/*.yaml (fog-node tooltips)
   site/data/essay.md      <- essay/essay.md (copied; skipped until it exists)
 

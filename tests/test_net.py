@@ -1,5 +1,6 @@
-"""Discrete-net invariants (core/net.py). These pin structure the essay and
-scorecard rely on; they are not a modeling test suite."""
+"""Discrete-net invariants (core/net.py). These tests pin the structural
+facts that the essay and scorecard rely on; they are not a modeling test
+suite."""
 
 from core.net import build_semiconductor_slice
 

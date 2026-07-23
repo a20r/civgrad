@@ -23,12 +23,24 @@ function escapeHtml(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+function sanitizeUrl(url) {
+  // Allowlist: http(s), mailto, and relative/anchor URLs. Anything with
+  // another scheme (javascript:, data:, ...) is dropped; quotes are encoded
+  // so the href can never break out of its attribute.
+  const u = url.replace(/"/g, "%22").replace(/'/g, "%27");
+  if (/^(https?:|mailto:)/i.test(u) || !/^[a-z][a-z0-9+.-]*:/i.test(u)) return u;
+  return null;
+}
+
 function inline(s) {
   return s
     .replace(/`([^`]+)`/g, "<code>$1</code>")
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/\*([^*]+)\*/g, "<em>$1</em>")
-    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (m, text, url) => {
+      const safe = sanitizeUrl(url);
+      return safe === null ? text : `<a href="${safe}">${text}</a>`;
+    });
 }
 
 function renderMarkdown(md) {
