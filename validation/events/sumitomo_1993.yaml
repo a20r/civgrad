@@ -44,7 +44,7 @@ xfail_reason: >-
   72-month horizon — a hysteresis trap: the adaptation law rebuilds capacity,
   but the price-mediated demand reallocation that pulled the real system back
   in months does not exist in the model. This is the failing test that
-  motivates the demand/allocation RFC (PLAN.md §6.4) and opened the
+  motivates the demand/allocation work (PLAN.md §5) and opened the
   packaging_resin oracle (map/_oracles/packaging_resin.yaml).
 
 baseline_v0_1:

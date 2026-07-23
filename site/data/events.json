@@ -1,0 +1,178 @@
+[
+ {
+  "name": "neon_2022",
+  "title": "2022 neon shock (Russia-Ukraine war: Ingas + Cryoin halt)",
+  "short": "2022 neon shock",
+  "year": 2022,
+  "order": 0,
+  "role": "training",
+  "status": "pass",
+  "transition": "Purify_Ne",
+  "capacity_lost": 0.5,
+  "ramp_tau_months": 9.0,
+  "shock_month": 6.0,
+  "buffers": {
+   "Ne_purified": 6.0
+  },
+  "counterfactual_buffer_months": 0.5,
+  "observable": "fab",
+  "history": "no fab stoppages; supply normalized ~12-18mo",
+  "history_note": "No major fab stoppages were attributed to neon; chipmakers had built ~6-month stockpiles after the 2014 Crimea price spike. Alternative purification capacity ramped over roughly 12-18 months.",
+  "sources": [],
+  "expected": {
+   "dip_pct": 0,
+   "recovery_months": 15,
+   "tolerance": {
+    "dip_pct": 5,
+    "recovery_months": 15
+   }
+  },
+  "band_note": "The band is a round-number encoding of the qualitative record above, written before statuses were computed; it is not a measured statistic. With a ~0% dip the 95%-recovery metric degenerates to time-of-minimum, hence the wide recovery band.",
+  "baseline_v0_1": {
+   "tau_replay": {
+    "dip_pct": 0.1,
+    "recovery_months": 16
+   },
+   "adaptive": {
+    "dip_pct": -0.7,
+    "recovery_months": 0
+   }
+  }
+ },
+ {
+  "name": "tohoku_2011",
+  "title": "2011 Tohoku earthquake (advanced wafer supply)",
+  "short": "2011 Tohoku (wafers)",
+  "year": 2011,
+  "order": 1,
+  "role": "holdout",
+  "status": "pass",
+  "transition": "WaferSupply",
+  "capacity_lost": 0.25,
+  "ramp_tau_months": 4.0,
+  "shock_month": 6.0,
+  "buffers": {
+   "Wafers": 2.0
+  },
+  "observable": "fab",
+  "history": "minor global impact",
+  "sources": [],
+  "expected": {
+   "dip_pct": 0,
+   "recovery_months": 0,
+   "tolerance": {
+    "dip_pct": 10,
+    "recovery_months": 6
+   }
+  },
+  "band_note": "Round-number encoding of \"minor global impact\", written before statuses were computed; not a measured statistic.",
+  "baseline_v0_1": {
+   "tau_replay": {
+    "dip_pct": -1.7,
+    "recovery_months": 0
+   },
+   "adaptive": {
+    "dip_pct": -0.6,
+    "recovery_months": 0
+   }
+  }
+ },
+ {
+  "name": "sumitomo_1993",
+  "title": "1993 Sumitomo Chemical epoxy-resin plant explosion (chip packaging)",
+  "short": "1993 Sumitomo (packaging)",
+  "year": 1993,
+  "order": 2,
+  "role": "holdout",
+  "status": "xfail",
+  "transition": "Package",
+  "capacity_lost": 0.6,
+  "ramp_tau_months": 6.0,
+  "shock_month": 6.0,
+  "buffers": {
+   "Chips": 1.5
+  },
+  "observable": "delivered",
+  "history": "price spike, brief pain, no catastrophe",
+  "sources": [],
+  "expected": {
+   "dip_pct": 15,
+   "recovery_months": 3,
+   "tolerance": {
+    "dip_pct": 15,
+    "recovery_months": 3
+   }
+  },
+  "band_note": "Round-number encoding of \"price spike, brief pain, no catastrophe\", written before statuses were computed; not a measured statistic. Note the band floor is 0% dip: history records real pain, so a model that shows nothing at all misses too.",
+  "xfail_reason": "The model misses this event twice, in opposite directions. Protocol v0 (imposed-tau, observing fab flow) shows dip ~0%: packaging halts do not stop fabs, so through the fab observable the event is invisible — the wrong-observable failure from the design history. Protocol v1 (adaptive, observing delivered flow) shows a ~58% dip with no recovery inside the 72-month horizon — a hysteresis trap: the adaptation law rebuilds capacity, but the price-mediated demand reallocation that pulled the real system back in months does not exist in the model. This is the failing test that motivates the demand/allocation work (PLAN.md §5) and opened the packaging_resin oracle (map/_oracles/packaging_resin.yaml).",
+  "baseline_v0_1": {
+   "tau_replay": {
+    "dip_pct": -1.7,
+    "recovery_months": 0
+   },
+   "adaptive": {
+    "dip_pct": 57.6,
+    "recovery_months": "inf"
+   }
+  }
+ },
+ {
+  "name": "photoresist_2019",
+  "title": "2019 Japan-Korea photoresist export curbs (analog replay)",
+  "short": "2019 photoresist (analog)",
+  "year": 2019,
+  "order": 3,
+  "role": "holdout",
+  "status": "pass",
+  "transition": "Purify_Ne",
+  "capacity_lost": 0.15,
+  "feared_capacity_lost": 0.9,
+  "ramp_tau_months": 1.0,
+  "shock_month": 6.0,
+  "buffers": {
+   "Ne_purified": 2.0
+  },
+  "observable": "fab",
+  "history": "non-event",
+  "sources": [],
+  "tau_replay": {
+   "capacity_lost": 0.9
+  },
+  "expected": {
+   "dip_pct": 0,
+   "recovery_months": 0,
+   "tolerance": {
+    "dip_pct": 5,
+    "recovery_months": 3
+   }
+  },
+  "band_note": "Round-number encoding of \"non-event\", written before statuses were computed; not a measured statistic. The adaptive protocol scores the realized (~15%) replay; the feared (90%) adaptive replay is an unscored counterfactual.",
+  "baseline_v0_1": {
+   "tau_replay": {
+    "dip_pct": -1.9,
+    "recovery_months": 0
+   },
+   "adaptive": {
+    "dip_pct": -0.7,
+    "recovery_months": 0
+   },
+   "adaptive_feared": {
+    "dip_pct": 64.0,
+    "recovery_months": 13.7
+   }
+  }
+ },
+ {
+  "name": "chip_crunch_2021",
+  "title": "2020-21 chip crunch (demand-side)",
+  "short": "2020-21 chip crunch",
+  "year": 2021,
+  "order": 4,
+  "role": "holdout",
+  "status": "out-of-scope",
+  "scope_reason": "no demand dynamics",
+  "observable": "delivered",
+  "history": "demand surge + ordering whiplash while fab capacity stayed intact; shortages persisted ~2 years",
+  "sources": []
+ }
+]

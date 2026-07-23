@@ -37,11 +37,11 @@ degenerates to time-of-minimum.
 
 ## The documented miss: Sumitomo 1993 — xfail, twice
 
-The model misses this event twice, in opposite directions. Protocol v0 (imposed-tau, observing fab flow) shows dip ~0%: packaging halts do not stop fabs, so through the fab observable the event is invisible — the wrong-observable failure from the design history. Protocol v1 (adaptive, observing delivered flow) shows a ~58% dip with no recovery inside the 72-month horizon — a hysteresis trap: the adaptation law rebuilds capacity, but the price-mediated demand reallocation that pulled the real system back in months does not exist in the model. This is the failing test that motivates the demand/allocation RFC (PLAN.md §6.4) and opened the packaging_resin oracle (map/_oracles/packaging_resin.yaml).
+The model misses this event twice, in opposite directions. Protocol v0 (imposed-tau, observing fab flow) shows dip ~0%: packaging halts do not stop fabs, so through the fab observable the event is invisible — the wrong-observable failure from the design history. Protocol v1 (adaptive, observing delivered flow) shows a ~58% dip with no recovery inside the 72-month horizon — a hysteresis trap: the adaptation law rebuilds capacity, but the price-mediated demand reallocation that pulled the real system back in months does not exist in the model. This is the failing test that motivates the demand/allocation work (PLAN.md §5) and opened the packaging_resin oracle (map/_oracles/packaging_resin.yaml).
 
 ## Out of scope
 
-- **2020-21 chip crunch (demand-side)** — demand surge + ordering whiplash while fab capacity stayed intact; shortages persisted ~2 years. Out of scope: no demand dynamics; see the demand/allocation RFC (PLAN.md §6.4).
+- **2020-21 chip crunch (demand-side)** — demand surge + ordering whiplash while fab capacity stayed intact; shortages persisted ~2 years. Out of scope: no demand dynamics; see the demand/allocation work (PLAN.md §5).
 
 ## Counterfactuals (informational, never scored)
 

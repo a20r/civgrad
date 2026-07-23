@@ -1,0 +1,38 @@
+# Deploy the static demo/essay site from site/ on main. No build step — the
+# folder is uploaded as-is (plain HTML/JS/CSS; data JSON is committed and
+# freshness-checked by validate.yml). Uses the GitHub Actions Pages flow so
+# the site can live in /site without a gh-pages branch; configure-pages
+# enables Pages on first run (if org policy blocks that, flip
+# Settings -> Pages -> Source to "GitHub Actions" once).
+name: pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -9,4 +9,4 @@ ports:
   outputs: [EUV_optics]
   inputs: []
 contract: "Zeiss SMT: 30yr optical know-how, mirrors polished to <1nm. Deeper SPOF than ASML itself."
-parameters: none quantified — all fog (see fog/priority.py)
+parameters: none quantified — all fog

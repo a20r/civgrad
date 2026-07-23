@@ -10,4 +10,4 @@ ports:
   inputs: []
 contract: "polysilicon -> ingot -> wafer (Shin-Etsu/SUMCO ~50%)"
 participates_in: [tohoku_2011]       # the 2011 holdout hits this interface
-parameters: none quantified — all fog (see fog/priority.py)
+parameters: none quantified — all fog

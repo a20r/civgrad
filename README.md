@@ -8,6 +8,11 @@ A differentiable, hierarchical Petri net of the global supply chain. Goal:
 locate where marginal investment buys the most marginal resilience — and make
 the map improvable by the people who actually know each territory.
 
+**Essay + live demo:** <https://a20r.github.io/civgrad/> — the living essay
+(`essay/essay.md`, v0.1 scaffold) with the adaptive model running in the
+browser, deployed from `site/` on every merge to `main` (no build step; the
+JS port is CI-checked against the Python scorecard).
+
 The model is three layers over one net (currently: a semiconductor slice with
 oracles at every frontier):
 
@@ -47,8 +52,8 @@ is the source of truth; the current table is inlined here.
 
 The Sumitomo xfail is deliberate and load-bearing: the model misses that event
 twice, in opposite directions (invisible through the fab observable in v0; a
-hysteresis trap through delivery in v1), and stays red until the
-demand/allocation RFC fixes the model — never by tuning the event
+hysteresis trap through delivery in v1), and stays red until the model gains
+demand/allocation dynamics — never by tuning the event
 (PLAN.md §3 "honesty artifact", AGENTS.md).
 
 **Pessimism-bias caveat, stated plainly:** the model has no price-mediated
@@ -66,7 +71,6 @@ python3 -m core.net               # discrete analyses: SPOFs, brittleness, livel
 python3 -m core.gradients         # throughput gradients (capacity + stockpiles)
 python3 -m core.adaptation        # adaptation law demo: ALPHA fit + holdouts
 python3 -m validation.runner      # all replays; regenerates SCORECARD.md; CI gate
-python3 -m fog.priority           # placeholder EVOI ranking of the fog
 ```
 
 `validation/baseline_outputs.txt` is the frozen regression oracle: those
@@ -74,7 +78,8 @@ exact numbers must reproduce (jax 0.10.2, CPU, x64) or you broke something.
 
 ## Contributing
 
-Two doors, deliberately asymmetric (details: [PLAN.md](PLAN.md) §2):
+This is an exploratory solo project. Issues and PRs welcome; no roadmap
+promises. Two doors, deliberately asymmetric (details: [PLAN.md](PLAN.md) §2):
 
 - **Data PR** (low friction): improve one number in
   [`map/semiconductors/net.yaml`](map/semiconductors/net.yaml) with a real
@@ -82,9 +87,10 @@ Two doors, deliberately asymmetric (details: [PLAN.md](PLAN.md) §2):
   needs citation"). No source, no merge.
 - **Subnet PR** (high value): expand an oracle in
   [`map/_oracles/`](map/_oracles/) — match its port places exactly, ship at
-  least one historical event, pass the validation gate. `python3 -m
-  fog.priority` says which expansion is worth the most (currently:
-  `packaging_resin`, opened by the Sumitomo miss).
+  least one historical event, pass the validation gate.
+  [`map/_oracles/README.md`](map/_oracles/README.md) lists each frontier;
+  `packaging_resin` is the one with a failing test attached (the Sumitomo
+  miss).
 
 AI agents: read [AGENTS.md](AGENTS.md) before doing anything.
 
