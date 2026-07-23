@@ -161,49 +161,45 @@ class Net:
 # =====================================================================
 # TOP-LEVEL MAP: semiconductor slice, with oracles at the frontier
 # =====================================================================
+# Parameter values (tokens, rebuild years, regions, arcs, contracts) come
+# from map/semiconductors/net.yaml via core.map_loader — the map is the
+# source of truth. The ordered name lists below are the ENGINE INDEX LAYOUT
+# (declaration order defines marking-tuple indices) and are asserted against
+# the yaml at build time; changing structure means changing both, on purpose
+# (that's a subnet PR).
+
+from core.map_loader import net_spec
+
+NET_PLACE_ORDER = [
+    "Ga_byproduct", "Ga_refined", "Ne_crude", "Ne_purified", "EUV_tools",
+    "Wafers_advanced", "Chips_fabbed", "Chips_packaged", "Goods", "E_waste",
+    "ExportBan_CN_US",
+    "EUV_optics", "EUV_worn",   # EquipMfg subnet (REFINED from ORACLE_EquipMfg)
+]
+NET_TRANSITION_ORDER = [
+    "Refine_Ga", "Purify_Ne", "Fab", "Package", "Ship_TW_Strait",
+    "Consume", "Recycle",
+    "ORACLE_Mining", "ORACLE_WaferSupply",
+    "Build_EUV", "Wear_EUV", "Refurb",          # EquipMfg subnet
+    "ORACLE_Optics", "ORACLE_Fertilizer",
+]
+
 
 def build_semiconductor_slice() -> Net:
-    n = Net("GSC:semiconductors")
-
-    # --- places (stocks) ---
-    ga_by   = n.place("Ga_byproduct",    tokens=3, rebuild_years=0.1, region="global")
-    ga_ref  = n.place("Ga_refined",      tokens=1, rebuild_years=2.5, region="china")
-    ne_cr   = n.place("Ne_crude",        tokens=2, rebuild_years=0.5, region="global")
-    ne_pu   = n.place("Ne_purified",     tokens=1, rebuild_years=1.5, region="mixed")
-    euv     = n.place("EUV_tools",       tokens=1, rebuild_years=10,  region="netherlands")
-    wafers  = n.place("Wafers_advanced", tokens=1, rebuild_years=8,   region="taiwan")
-    chips   = n.place("Chips_fabbed",    tokens=0, rebuild_years=8,   region="taiwan")
-    pkg     = n.place("Chips_packaged",  tokens=0, rebuild_years=4,   region="taiwan")
-    goods   = n.place("Goods",           tokens=0, rebuild_years=1,   region="global")
-    ewaste  = n.place("E_waste",         tokens=0, rebuild_years=0,   region="global")
-    ban     = n.place("ExportBan_CN_US", tokens=0, rebuild_years=0,   region="policy")
-
-    # --- transitions ---
-    n.add(Transition("Refine_Ga", {ga_by: 1}, {ga_ref: 1},
-                     inhibitors=[ban], region="china"))
-    n.add(Transition("Purify_Ne", {ne_cr: 1}, {ne_pu: 1}, region="mixed"))
-    n.add(Transition("Fab", {ga_ref: 1, ne_pu: 1, wafers: 1}, {chips: 1},
-                     read_arcs={euv: 1}, region="taiwan"))
-    n.add(Transition("Package", {chips: 1}, {pkg: 1}, region="taiwan"))
-    n.add(Transition("Ship_TW_Strait", {pkg: 1}, {goods: 1}, region="taiwan_strait"))
-    n.add(Transition("Consume", {goods: 1}, {ewaste: 1}, region="global"))
-    n.add(Transition("Recycle", {ewaste: 1}, {ga_by: 1}, region="global"))
-
-    # --- oracles: the zoomed-out neighbors (expand later) ---
-    n.add(Oracle("ORACLE_Mining", {}, {ga_by: 1, ne_cr: 1}, region="global",
-                 contract="bauxite/zinc mining + steel-mill air separation -> byproduct feeds"))
-    n.add(Oracle("ORACLE_WaferSupply", {}, {wafers: 1}, region="japan",
-                 contract="polysilicon -> ingot -> wafer (Shin-Etsu/SUMCO ~50%)"))
-    # --- REFINED: EquipMfg subnet (was ORACLE_EquipMfg) ---
-    optics   = n.place("EUV_optics",   tokens=1, rebuild_years=15, region="germany")  # Zeiss, sole source
-    euv_worn = n.place("EUV_worn",     tokens=0, rebuild_years=0,  region="taiwan")
-    n.add(Transition("Build_EUV", {pkg: 1, optics: 1}, {euv: 1}, region="netherlands"))
-    n.add(Transition("Wear_EUV",  {euv: 1}, {euv_worn: 1}, region="taiwan"))
-    n.add(Transition("Refurb",    {euv_worn: 1, pkg: 1}, {euv: 1}, region="netherlands"))
-    n.add(Oracle("ORACLE_Optics", {}, {optics: 1}, region="germany",
-                 contract="Zeiss SMT: 30yr optical know-how, mirrors polished to <1nm. Deeper SPOF than ASML itself."))
-    n.add(Oracle("ORACLE_Fertilizer", {}, {}, region="morocco",
-                 contract="phosphate/potash/Haber-Bosch subnet — food system. NEXT SLICE."))
+    net_name, pspec, tspec = net_spec(NET_PLACE_ORDER, NET_TRANSITION_ORDER)
+    n = Net(net_name)
+    for p in pspec:
+        n.place(p.name, tokens=p.tokens, rebuild_years=p.rebuild_years,
+                region=p.region)
+    for t in tspec:
+        cls = Oracle if t.oracle else Transition
+        kw = {"contract": t.contract} if t.oracle else {}
+        n.add(cls(t.name,
+                  {n.places[p]: w for p, w in t.inputs.items()},
+                  {n.places[p]: w for p, w in t.outputs.items()},
+                  read_arcs={n.places[p]: w for p, w in t.read_arcs.items()},
+                  inhibitors=[n.places[p] for p in t.inhibitors],
+                  region=t.region, **kw))
     return n
 
 

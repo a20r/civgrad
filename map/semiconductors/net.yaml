@@ -1,11 +1,14 @@
 # map/semiconductors/net.yaml — the semiconductor slice, WITH provenance.
 #
-# TRANSCRIPTION of core/net.py (structure, tokens, rebuild times, regions) and
-# core/continuous.py (flow capacities, frozen globals). For v0.1 the Python
-# modules are authoritative and this file is the contribution surface: a data
-# PR improves a number HERE, with a citation (PLAN.md §2: no source, no
-# merge), and a maintainer mirrors it into core/ until a loader lands
-# (KNOWN_ISSUES.md).
+# SOURCE OF TRUTH for parameter values: core/map_loader.py builds the
+# discrete net (core/net.py) and the continuous relaxation
+# (core/continuous.py) from this file — tokens, rebuild times, regions, arc
+# weights, capacities, oracle contracts, frozen globals. A data PR that
+# improves a number here changes the model directly: it needs a citation
+# (PLAN.md §2: no source, no merge) and must pass the validation gate. The
+# engine's ordered name lists (index layout) live in core/ and are asserted
+# against this file at import; structural changes touch both, consciously
+# (subnet PR).
 #
 # Provenance schema (PLAN.md §2): every numeric parameter carries
 #   {value, units, source, confidence: A|B|C, date}

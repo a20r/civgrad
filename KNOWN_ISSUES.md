@@ -33,11 +33,16 @@ listed were proven side-effect-free against `validation/baseline_outputs.txt`.
    "scored elsewhere", but no elsewhere exists yet. Source-place brittleness
    (mines, oracles) is currently unscored.
 
-7. **`map/semiconductors/net.yaml` is a transcription, not a source of
-   truth** — core/ remains authoritative in v0.1 and the two can drift. A
-   loader that builds the net from the yaml (making the map canonical) is the
-   intended fix; until then data PRs update the yaml and a maintainer mirrors
-   the change into core/ in the same PR.
+7. **RESOLVED — the map is now the source of truth for values.**
+   `core/map_loader.py` builds parameter values (tokens, rebuild years,
+   regions, arc weights, capacities, oracle contracts, frozen globals) from
+   `map/semiconductors/net.yaml`, so a data PR that edits the yaml changes
+   the model directly and must pass the validation gate; nothing is mirrored
+   by hand anymore. Residual, by design: the ordered name lists (the
+   engine's marking/capacity index layout) remain in `core/net.py` and
+   `core/continuous.py` and are asserted against the yaml at import —
+   adding or removing places/transitions touches both files consciously
+   (that's a subnet PR).
 
 8. **`Package` consumes nothing but chips** — packaging materials (resin,
    substrates) are not modeled, which is exactly why Sumitomo 1993 is

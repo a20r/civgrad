@@ -18,11 +18,16 @@ import jax
 import jax.numpy as jnp
 
 from core.continuous import (Pre, Post, TRANSITIONS, PLACES, P, T_IDX, NT, NP_,
-                             flows, cap0, burn_in)
+                             flows, cap0, burn_in, UTILIZATION)
+from core.map_loader import frozen_globals
+
+_FROZEN = frozen_globals()
 
 DT = 0.1          # 1 unit = 1 month
-HORIZON = 6.0     # forward-looking planning horizon (months of runway)
-                  # FROZEN global parameter: change only via a methodology PR (AGENTS.md).
+HORIZON = _FROZEN["HORIZON"]
+                  # forward-looking planning horizon (months of runway)
+                  # FROZEN global parameter (map frozen_globals): change only
+                  # via a methodology PR (AGENTS.md).
 FAB = T_IDX["Fab"]
 SHIP = T_IDX["Ship_Strait"]
 
@@ -79,7 +84,7 @@ x = jnp.full(NP_, 1.0)
 for _ in range(2):
     xs, F = burn_in(c, x)
     for tn in ["Purify_Ne", "WaferSupply", "Refine_Ga"]:
-        c = c.at[T_IDX[tn]].set(F / 0.90)
+        c = c.at[T_IDX[tn]].set(F / UTILIZATION)
     x = xs
 X_REF, F = burn_in(c, x)
 X_JIT = X_REF
@@ -88,8 +93,9 @@ for pn in ["Ne_purified", "Wafers", "Ga_refined", "Chips", "Pkg"]:
 X_REF = X_JIT  # reference = normal JIT operating stocks
 
 # Fitted on the neon training event (see the sweep in __main__), then FROZEN
-# for all holdouts. Change only via a methodology PR (AGENTS.md).
-ALPHA = 0.06
+# for all holdouts (map frozen_globals). Change only via a methodology PR
+# (AGENTS.md).
+ALPHA = _FROZEN["ALPHA"]
 
 
 def run(buffer_place, buffer_months, tidx, kill, alpha, observe="fab"):
