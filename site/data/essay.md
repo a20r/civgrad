@@ -148,8 +148,7 @@ cost of building new. The US Air Force figured this out decades ago in the
 Arizona desert. The semiconductor industry, which scraps old fab equipment
 routinely, is quietly shredding resilience capital.
 
-*The interactive model sits here — disrupt something and watch the gradients
-re-rank.*
+<!-- demo -->
 
 ## 6. Making recovery emergent
 
@@ -232,6 +231,8 @@ design-around response, and therefore it **systematically overstates how
 deep shocks bite and how long they last**. Trust where it says fragility
 concentrates — the rankings, the SPOFs, the signs of the gradients.
 Distrust how bad it says things get.
+
+<!-- scorecard -->
 
 ## 8. What this is and isn't
 
