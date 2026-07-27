@@ -1,11 +1,17 @@
 # civgrad methodology
 
-`version: 0.1 — skeleton`
+`version: 0.2 — audit layer`
 
 This document is versioned like a spec (PLAN.md §4): methodology changes bump
 the version here and re-run **all** validation from scratch — every event,
 training events included, re-fit and re-frozen — so methodology drift cannot
 quietly overfit event by event. Licensed CC BY 4.0 (see LICENSE-DOCS).
+
+v0.2 adds the audit layer (§7): a measured sensitivity protocol over the
+confidence-C fog, a tail-objective analysis, and the price experiment probing
+the Sumitomo boundary. **No model equation, frozen parameter, or event fact
+changed in v0.2** — the full suite re-ran and reproduces the v0.1 baseline
+byte-for-byte, so no re-fit was triggered; the frozen v0.1 numbers stand.
 
 ## 1. Why Petri nets
 
@@ -75,13 +81,52 @@ so *where fragility concentrates* is more trustworthy than *how bad it gets*.
 
 1. **No demand/allocation dynamics** — the biggest gap; tied to the failing
    Sumitomo xfail (both protocols) and the out-of-scope chip-crunch row.
+   Now probed from both sides: the sensitivity sweep shows the miss is
+   structural (95% of 500 fog draws still miss), and the price experiment
+   shows a processing-margin restoration signal dissolves the attractor
+   (PRICE_EXPERIMENT.md) — evidence for the mechanism, which still only
+   ships via a methodology PR.
 2. **Packaging materials are invisible** — `Package` has no consumable
    inputs; tied to the same miss; opens `map/_oracles/packaging_resin.yaml`.
 3. **Oracle fog at every frontier** — mining, wafer supply, optics,
    fertilizer are interface-only; each hides unknown-direction error
    (`map/_oracles/README.md` lists them; no replay currently crosses them).
-4. **Mean-only objective** — no tail/CVaR objective and no test exercising
-   one (§3).
-5. **Provenance debt** — every parameter in `map/semiconductors/net.yaml` is
-   confidence C ("session estimate — needs citation"), 43 of them. Data PRs
-   burn this down one citation at a time.
+4. **Mean-only frozen objective** — the scored objective remains the prior
+   mean. A CVaR(30%) tail objective now exists as a measured analysis
+   (POLICY.md §2) with a caveat of its own: the 72-month replay horizon
+   truncates slow catastrophes (the Zeiss knockout largely bites beyond
+   it), so the tail analysis prices the six-year tail, not the forever
+   tail. Promoting a tail objective into the frozen protocol is a
+   methodology PR.
+5. **Provenance debt, now partially burned down** — every parameter in
+   `map/semiconductors/net.yaml` remains confidence C (reviewer upgrades
+   pending), but the event yamls carry 21 fetched-and-quote-checked
+   citations and the map's load-bearing rebuild times and concentration
+   claims now cite USGS / USITC / ASML / CSIS sources; documented
+   discrepancies (e.g. the Tohoku wafer buffer) are recorded in
+   `value_notes` rather than silently changed. The sensitivity audit
+   (SENSITIVITY.md) shows rankings stabilize when parameter fog — not
+   prior fog — is removed, so this is the highest-leverage work.
+
+## 7. The audit layer (v0.2)
+
+Three reproducible analyses live in `analysis/` (none feeds back into the
+frozen model; `analysis/engine.py::selfcheck` hard-asserts the analysis twin
+reproduces the frozen baseline before any sweep runs):
+
+- **Sensitivity** (`python3 -m analysis.sensitivity`, SENSITIVITY.md):
+  500 seeded draws perturbing all 13 capacities and K_SAT by lognormal
+  factors (95% inside x0.5-x2 — the honest reading of confidence C), plus a
+  separate disruption-prior fog sweep. Measures sign stability, ranking
+  stability, and whether the Sumitomo miss is parameter-fixable (it is not).
+  Headline: what survives parameter fog is the partition (which side of the
+  net the marginal dollar belongs to), not the fine ordering.
+- **Price experiment** (`python3 -m analysis.price_experiment`,
+  PRICE_EXPERIMENT.md): the measured anatomy of the Sumitomo hysteresis
+  trap, a processing-margin restoration law that dissolves it (recovery
+  ~10 months, passing replays untouched), and the cautionary
+  gradient-as-price arm (total delivery collapse).
+- **Policy synthesis** (`python3 -m analysis.policy`, POLICY.md): the
+  gradient vector cashed out into five conclusions, each annotated with its
+  measured robustness; the buffer sizing rule made explicit per event; the
+  mean-vs-tail objective comparison.

@@ -56,6 +56,30 @@ hysteresis trap through delivery in v1), and stays red until the model gains
 demand/allocation dynamics — never by tuning the event
 (PLAN.md §3 "honesty artifact", AGENTS.md).
 
+## Audits and the actionable conclusion
+
+Three reproducible analyses (in `analysis/`, METHODOLOGY.md §7) sit on top of
+the frozen model — none feeds back into it, and each hard-asserts it is
+auditing the exact frozen baseline before running:
+
+- **[SENSITIVITY.md](SENSITIVITY.md)** — the fog, measured: a 500-draw sweep
+  letting every confidence-C parameter be wrong by ~2x. What survives is the
+  *partition* (the marginal dollar belongs in the production/equipment
+  complex in ~91-99% of draws; the big negative signs hold at 85-92%, 100%
+  under prior fog), not the fine ordering. The Sumitomo miss survives in 95%
+  of draws: structural, not parameter-fixable.
+- **[PRICE_EXPERIMENT.md](PRICE_EXPERIMENT.md)** — the hysteresis trap's
+  measured anatomy (a bloated input buffer masks destroyed capacity inside
+  the restoration signal), a processing-margin law that dissolves the
+  attractor (recovery ~10 months; passing replays untouched), and the
+  cautionary arm: rationing by the gradient's own priority list in the wrong
+  crisis collapses deliveries entirely.
+- **[POLICY.md](POLICY.md)** — the marginal dollar, cashed out: five
+  conclusions (buffer sizing rule, upstream-only capacity investment,
+  allocation-over-capacity in crisis, the boneyard, the tail shift toward
+  fab redundancy), each carrying its measured robustness and the standing
+  pessimism caveat.
+
 **Pessimism-bias caveat, stated plainly:** the model has no price-mediated
 demand allocation, no substitution, no design-around response. It therefore
 systematically overstates how deep supply shocks bite and how long they last
@@ -71,6 +95,9 @@ python3 -m core.net               # discrete analyses: SPOFs, brittleness, livel
 python3 -m core.gradients         # throughput gradients (capacity + stockpiles)
 python3 -m core.adaptation        # adaptation law demo: ALPHA fit + holdouts
 python3 -m validation.runner      # all replays; regenerates SCORECARD.md; CI gate
+python3 -m analysis.sensitivity   # 500-draw fog audit; regenerates SENSITIVITY.md
+python3 -m analysis.price_experiment  # Sumitomo probe; regenerates PRICE_EXPERIMENT.md
+python3 -m analysis.policy        # synthesis; regenerates POLICY.md (needs the sweep's json)
 ```
 
 `validation/baseline_outputs.txt` is the frozen regression oracle: those
@@ -83,8 +110,12 @@ promises. Two doors, deliberately asymmetric (details: [PLAN.md](PLAN.md) §2):
 
 - **Data PR** (low friction): improve one number in
   [`map/semiconductors/net.yaml`](map/semiconductors/net.yaml) with a real
-  citation. Every parameter is currently `confidence: C` ("session estimate —
-  needs citation"). No source, no merge.
+  citation. Every parameter is still `confidence: C` (reviewer upgrades
+  pending), though the load-bearing ones now carry verified citations; the
+  event yamls record documented-value discrepancies (`value_notes`) that are
+  ready-made data PRs — register predictions before running them
+  (AGENTS.md). No source, no merge. The sensitivity audit is the measured
+  case for this work: rankings stabilize when parameter fog is removed.
 - **Subnet PR** (high value): expand an oracle in
   [`map/_oracles/`](map/_oracles/) — match its port places exactly, ship at
   least one historical event, pass the validation gate.

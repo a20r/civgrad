@@ -48,3 +48,31 @@ listed were proven side-effect-free against `validation/baseline_outputs.txt`.
    substrates) are not modeled, which is exactly why Sumitomo 1993 is
    invisible to protocol v0 through the fab observable. Tracked by the xfail
    and `map/_oracles/packaging_resin.yaml`, not fixable by a data PR.
+
+9. **Documented-value discrepancies recorded, not applied** — the 2026-07-27
+   provenance pass found two event inputs whose documented values disagree
+   with the frozen session estimates: `tohoku_2011` buffers.Wafers 2.0 mo
+   (documented: TSMC ~30 days, "mere weeks" industry-wide) and `neon_2022`
+   buffers.Ne_purified 6.0 mo (documented as the UPPER end — largest
+   producers only; smaller makers 4-6 weeks). Both are recorded in the
+   yamls' `value_notes` instead of changed, because changing them moves
+   scored numbers: each is a candidate data PR that must register predicted
+   dip/recovery in the PR description BEFORE the replay runs (AGENTS.md
+   rule 3).
+
+10. **The v1 hysteresis narration corrected by measurement** — the design
+    session narrated the Sumitomo never-recovery as "the tool fleet wears
+    down unreplaced." The traced anatomy (PRICE_EXPERIMENT.md) is different:
+    the bloated Chips buffer masks Package's destroyed capacity inside the
+    flow-based restoration signal (fat input saturation substitutes for
+    missing capacity), restoration stalls ~8% short, and deliveries settle
+    ~10% low with every alarm silent. Same conclusion (missing reallocation
+    mechanism), different mechanism — essay text updated to match the
+    measurement.
+
+11. **Tail analysis is horizon-truncated** — the CVaR(30%) analysis
+    (POLICY.md §2) prices catastrophes within the 72-month replay horizon,
+    so the Zeiss-knockout scenario (tau ~120 mo) barely registers: the
+    refurb loop carries the system inside the window and the real pain sits
+    beyond it. Extending the horizon for slow catastrophes is named future
+    work; do not read the tail table as "optics loss is fine."
