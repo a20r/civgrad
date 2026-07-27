@@ -1,0 +1,442 @@
+{
+ "expected": {
+  "draws": 500,
+  "fab_build_top3_pct": 40.20000100135803,
+  "fab_first_pct": 10.400000214576721,
+  "kendall_tau_mean": 0.4688717948717947,
+  "kendall_tau_p10": 0.12692307692307697,
+  "label": "expected",
+  "modal_top_cap": "Build_EUV",
+  "modal_top_cap_pct": 23.0,
+  "neg_caps": {
+   "Package": {
+    "floor_pct": 23.6,
+    "stable_pct": 23.600001633167267
+   },
+   "Ship_Strait": {
+    "floor_pct": 84.8,
+    "stable_pct": 84.80000495910645
+   },
+   "Wear_EUV": {
+    "floor_pct": 90.6,
+    "stable_pct": 90.6000018119812
+   }
+  },
+  "neg_stks": {
+   "Chips": {
+    "floor_pct": 14.2,
+    "stable_pct": 14.20000046491623
+   },
+   "Pkg": {
+    "floor_pct": 19.4,
+    "stable_pct": 19.40000057220459
+   }
+  },
+  "per_cap": {
+   "Build_EUV": {
+    "pos_pct": 90.80000519752502,
+    "top1_pct": 23.0
+   },
+   "Consume": {
+    "pos_pct": 32.40000009536743,
+    "top1_pct": 0.0
+   },
+   "Fab": {
+    "pos_pct": 91.40000343322754,
+    "top1_pct": 10.4
+   },
+   "Mine": {
+    "pos_pct": 82.00000524520874,
+    "top1_pct": 8.4
+   },
+   "OpticsMfg": {
+    "pos_pct": 24.60000067949295,
+    "top1_pct": 0.2
+   },
+   "Package": {
+    "pos_pct": 74.60000514984131,
+    "top1_pct": 2.6
+   },
+   "Purify_Ne": {
+    "pos_pct": 66.00000262260437,
+    "top1_pct": 22.0
+   },
+   "Recycle": {
+    "pos_pct": 33.000001311302185,
+    "top1_pct": 0.0
+   },
+   "Refine_Ga": {
+    "pos_pct": 32.8000009059906,
+    "top1_pct": 12.2
+   },
+   "Refurb": {
+    "pos_pct": 91.00000262260437,
+    "top1_pct": 2.8
+   },
+   "Ship_Strait": {
+    "pos_pct": 13.40000033378601,
+    "top1_pct": 0.2
+   },
+   "WaferSupply": {
+    "pos_pct": 15.000000596046448,
+    "top1_pct": 11.6
+   },
+   "Wear_EUV": {
+    "pos_pct": 8.60000029206276,
+    "top1_pct": 6.6
+   }
+  },
+  "per_stk": {
+   "Chips": {
+    "pos_pct": 82.40000605583191,
+    "top1_pct": 7.6
+   },
+   "EUV_optics": {
+    "pos_pct": 24.400001764297485,
+    "top1_pct": 0.4
+   },
+   "EUV_tools": {
+    "pos_pct": 87.40000128746033,
+    "top1_pct": 47.8
+   },
+   "EUV_worn": {
+    "pos_pct": 33.60000252723694,
+    "top1_pct": 0.0
+   },
+   "E_waste": {
+    "pos_pct": 33.000001311302185,
+    "top1_pct": 0.0
+   },
+   "Ga_byproduct": {
+    "pos_pct": 32.600000500679016,
+    "top1_pct": 1.2
+   },
+   "Ga_refined": {
+    "pos_pct": 32.40000009536743,
+    "top1_pct": 12.8
+   },
+   "Goods": {
+    "pos_pct": 33.000001311302185,
+    "top1_pct": 0.2
+   },
+   "Ne_crude": {
+    "pos_pct": 65.00000357627869,
+    "top1_pct": 0.8
+   },
+   "Ne_purified": {
+    "pos_pct": 64.000004529953,
+    "top1_pct": 15.4
+   },
+   "Pkg": {
+    "pos_pct": 78.80000472068787,
+    "top1_pct": 2.2
+   },
+   "Wafers": {
+    "pos_pct": 15.400001406669617,
+    "top1_pct": 11.6
+   }
+  },
+  "top3_same_pct": 5.8000002056360245,
+  "top_cap_upstream_pct": 90.6,
+  "top_stk_upstream_pct": 90.0,
+  "valid": 500,
+  "worn_on_top_pct": 12.200000882148743
+ },
+ "n": 500,
+ "prior": {
+  "draws": 500,
+  "fab_build_top3_pct": 95.40000557899475,
+  "fab_first_pct": 94.0000057220459,
+  "kendall_tau_mean": 0.9186666666666666,
+  "kendall_tau_p10": 0.8461538461538461,
+  "label": "expected",
+  "modal_top_cap": "Fab",
+  "modal_top_cap_pct": 94.0,
+  "neg_caps": {
+   "Package": {
+    "floor_pct": 84.4,
+    "stable_pct": 84.40000414848328
+   },
+   "Ship_Strait": {
+    "floor_pct": 99.8,
+    "stable_pct": 99.80000257492065
+   },
+   "Wear_EUV": {
+    "floor_pct": 100.0,
+    "stable_pct": 100.0
+   }
+  },
+  "neg_stks": {
+   "Chips": {
+    "floor_pct": 1.0,
+    "stable_pct": 1.0000000707805157
+   },
+   "Pkg": {
+    "floor_pct": 0.0,
+    "stable_pct": 0.0
+   }
+  },
+  "per_cap": {
+   "Build_EUV": {
+    "pos_pct": 100.0,
+    "top1_pct": 5.8
+   },
+   "Consume": {
+    "pos_pct": 100.0,
+    "top1_pct": 0.0
+   },
+   "Fab": {
+    "pos_pct": 99.80000257492065,
+    "top1_pct": 94.0
+   },
+   "Mine": {
+    "pos_pct": 100.0,
+    "top1_pct": 0.0
+   },
+   "OpticsMfg": {
+    "pos_pct": 98.80000352859497,
+    "top1_pct": 0.0
+   },
+   "Package": {
+    "pos_pct": 15.600000321865082,
+    "top1_pct": 0.2
+   },
+   "Purify_Ne": {
+    "pos_pct": 72.20000624656677,
+    "top1_pct": 0.0
+   },
+   "Recycle": {
+    "pos_pct": 100.0,
+    "top1_pct": 0.0
+   },
+   "Refine_Ga": {
+    "pos_pct": 100.0,
+    "top1_pct": 0.0
+   },
+   "Refurb": {
+    "pos_pct": 100.0,
+    "top1_pct": 0.0
+   },
+   "Ship_Strait": {
+    "pos_pct": 0.20000000949949026,
+    "top1_pct": 0.0
+   },
+   "WaferSupply": {
+    "pos_pct": 0.0,
+    "top1_pct": 0.0
+   },
+   "Wear_EUV": {
+    "pos_pct": 0.0,
+    "top1_pct": 0.0
+   }
+  },
+  "per_stk": {
+   "Chips": {
+    "pos_pct": 99.0000069141388,
+    "top1_pct": 0.0
+   },
+   "EUV_optics": {
+    "pos_pct": 98.80000352859497,
+    "top1_pct": 0.0
+   },
+   "EUV_tools": {
+    "pos_pct": 100.0,
+    "top1_pct": 70.0
+   },
+   "EUV_worn": {
+    "pos_pct": 100.0,
+    "top1_pct": 0.2
+   },
+   "E_waste": {
+    "pos_pct": 100.0,
+    "top1_pct": 0.0
+   },
+   "Ga_byproduct": {
+    "pos_pct": 100.0,
+    "top1_pct": 0.0
+   },
+   "Ga_refined": {
+    "pos_pct": 99.80000257492065,
+    "top1_pct": 28.4
+   },
+   "Goods": {
+    "pos_pct": 100.0,
+    "top1_pct": 0.0
+   },
+   "Ne_crude": {
+    "pos_pct": 72.20000624656677,
+    "top1_pct": 0.0
+   },
+   "Ne_purified": {
+    "pos_pct": 72.20000624656677,
+    "top1_pct": 1.4
+   },
+   "Pkg": {
+    "pos_pct": 100.0,
+    "top1_pct": 0.0
+   },
+   "Wafers": {
+    "pos_pct": 0.0,
+    "top1_pct": 0.0
+   }
+  },
+  "top3_same_pct": 55.000001192092896,
+  "top_cap_upstream_pct": 99.8,
+  "top_stk_upstream_pct": 100.0,
+  "valid": 500,
+  "worn_on_top_pct": 0.20000000949949026
+ },
+ "seed": 0,
+ "sigma_param": 0.35364652069384966,
+ "sigma_prior": 0.5,
+ "single": {
+  "draws": 500,
+  "fab_build_top3_pct": 41.40000343322754,
+  "fab_first_pct": 9.000000357627869,
+  "kendall_tau_mean": 0.5309743589743587,
+  "kendall_tau_p10": 0.3076923076923077,
+  "label": "single",
+  "modal_top_cap": "Build_EUV",
+  "modal_top_cap_pct": 36.2,
+  "neg_caps": {
+   "Package": {
+    "floor_pct": 50.8,
+    "stable_pct": 50.80000162124634
+   },
+   "Ship_Strait": {
+    "floor_pct": 89.2,
+    "stable_pct": 89.20000195503235
+   },
+   "Wear_EUV": {
+    "floor_pct": 92.0,
+    "stable_pct": 92.00000166893005
+   }
+  },
+  "neg_stks": {
+   "Chips": {
+    "floor_pct": 15.8,
+    "stable_pct": 15.800000727176666
+   },
+   "Pkg": {
+    "floor_pct": 20.6,
+    "stable_pct": 20.600001513957977
+   }
+  },
+  "per_cap": {
+   "Build_EUV": {
+    "pos_pct": 93.00000667572021,
+    "top1_pct": 36.2
+   },
+   "Consume": {
+    "pos_pct": 32.0000022649765,
+    "top1_pct": 0.0
+   },
+   "Fab": {
+    "pos_pct": 98.60000610351562,
+    "top1_pct": 9.0
+   },
+   "Mine": {
+    "pos_pct": 78.4000039100647,
+    "top1_pct": 12.2
+   },
+   "OpticsMfg": {
+    "pos_pct": 30.20000159740448,
+    "top1_pct": 0.8
+   },
+   "Package": {
+    "pos_pct": 47.00000286102295,
+    "top1_pct": 0.2
+   },
+   "Purify_Ne": {
+    "pos_pct": 52.799999713897705,
+    "top1_pct": 13.6
+   },
+   "Recycle": {
+    "pos_pct": 32.0000022649765,
+    "top1_pct": 0.0
+   },
+   "Refine_Ga": {
+    "pos_pct": 32.200002670288086,
+    "top1_pct": 11.8
+   },
+   "Refurb": {
+    "pos_pct": 92.60000586509705,
+    "top1_pct": 3.6
+   },
+   "Ship_Strait": {
+    "pos_pct": 8.60000029206276,
+    "top1_pct": 0.0
+   },
+   "WaferSupply": {
+    "pos_pct": 25.40000081062317,
+    "top1_pct": 11.8
+   },
+   "Wear_EUV": {
+    "pos_pct": 8.000000566244125,
+    "top1_pct": 0.8
+   }
+  },
+  "per_stk": {
+   "Chips": {
+    "pos_pct": 82.00000524520874,
+    "top1_pct": 0.0
+   },
+   "EUV_optics": {
+    "pos_pct": 85.60000658035278,
+    "top1_pct": 0.8
+   },
+   "EUV_tools": {
+    "pos_pct": 88.20000290870667,
+    "top1_pct": 44.0
+   },
+   "EUV_worn": {
+    "pos_pct": 85.20000576972961,
+    "top1_pct": 1.2
+   },
+   "E_waste": {
+    "pos_pct": 32.0000022649765,
+    "top1_pct": 0.0
+   },
+   "Ga_byproduct": {
+    "pos_pct": 32.0000022649765,
+    "top1_pct": 0.0
+   },
+   "Ga_refined": {
+    "pos_pct": 65.80000519752502,
+    "top1_pct": 12.8
+   },
+   "Goods": {
+    "pos_pct": 32.200002670288086,
+    "top1_pct": 0.2
+   },
+   "Ne_crude": {
+    "pos_pct": 52.799999713897705,
+    "top1_pct": 8.2
+   },
+   "Ne_purified": {
+    "pos_pct": 81.80000185966492,
+    "top1_pct": 20.2
+   },
+   "Pkg": {
+    "pos_pct": 79.40000295639038,
+    "top1_pct": 0.0
+   },
+   "Wafers": {
+    "pos_pct": 70.00000476837158,
+    "top1_pct": 12.6
+   }
+  },
+  "top3_same_pct": 1.600000075995922,
+  "top_cap_upstream_pct": 99.0,
+  "top_stk_upstream_pct": 99.8,
+  "valid": 500,
+  "worn_on_top_pct": 20.400001108646393
+ },
+ "sumitomo": {
+  "draws": 500,
+  "median_dip_pct": 95.60127796915609,
+  "never_recover_pct": 44.600000977516174,
+  "still_miss_pct": 94.80000138282776,
+  "valid": 494
+ }
+}
