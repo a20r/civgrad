@@ -21,11 +21,45 @@ observable: fab
 
 history: "no fab stoppages; supply normalized ~12-18mo"
 history_note: >-
-  No major fab stoppages were attributed to neon; chipmakers had built ~6-month
-  stockpiles after the 2014 Crimea price spike. Alternative purification
-  capacity ramped over roughly 12-18 months.
-sources: []             # citations still needed — facts as recorded in the design
-                        # session (docs/TRANSCRIPT.md); provenance rule in AGENTS.md
+  No major fab stoppages were attributed to neon; chipmakers had built
+  stockpiles after the 2014 Crimea price spike (documented range: up to ~6
+  months at the largest producers, 4-6 weeks at smaller ones — the yaml's 6.0
+  is the documented upper end, see sources). Alternative purification
+  capacity ramped over roughly 12-18 months (Korea: POSCO/TEMC line from Jan
+  2022, SK hynix 40% locally sourced by Oct 2022; China's share rose).
+  Neon prices spiked ~9x invasion-day levels within ~6 weeks (China wholesale).
+sources:                # added 2026-07-27; every URL fetched and quote-checked
+                        # before citing (see PR); confidence grades remain for
+                        # the reviewer (AGENTS.md rule 4)
+  - url: https://www.business-standard.com/article/international/ukraine-halts-half-of-world-s-neon-output-for-chips-clouding-outlook-122031200039_1.html
+    publisher: "Reuters (wire text via Business Standard mirror)"
+    date: "2022-03-12"
+    supports: "Ingas + Cryoin = 45-54% of world semiconductor-grade neon; both halted by 2022-03-11; 2014 Crimea spike ~600%; stockpile estimates 'vary widely'"
+  - url: https://www.usitc.gov/publications/332/executive_briefings/ebot_decarlo_goodman_ukraine_neon_and_semiconductors.pdf
+    publisher: "U.S. International Trade Commission (Executive Briefings on Trade)"
+    date: "2022-04"
+    supports: "Ukraine ~half of world neon (Soviet steel-industry legacy; byproduct of liquid-oxygen generation); Cryoin + Ingas unable to produce as of 2022-03-11; post-2014 prices spiked >600%; firms stockpiled"
+  - url: https://techmonitor.ai/silicon/chip-industry-russia-ukraine-war-neon
+    publisher: "Tech Monitor"
+    date: "2022-03"
+    supports: "larger chip producers held up to ~6 months of neon; smaller makers 4-6 weeks; contingency plans date to Crimea 2014"
+  - url: https://www.scmp.com/tech/tech-trends/article/3170869/war-ukraine-inflates-price-neon-chip-making-it-might-be-good-china
+    publisher: "South China Morning Post"
+    date: "2022-04"
+    supports: "China wholesale industrial neon ~9x the Feb 24 quote within ~6 weeks; China's global share projected to rise ~30% -> ~50%"
+  - url: https://news.skhynix.com/sk-hynix-sources-neon-gas-locally/
+    publisher: "SK hynix Newsroom"
+    date: "2022-10"
+    supports: "40% of SK hynix neon locally sourced by Oct 2022 (POSCO), 100% targeted 2024 — the alternative-supply ramp"
+  - url: https://www.koreaherald.com/article/2759302
+    publisher: "The Korea Herald"
+    date: "2022-01"
+    supports: "POSCO/TEMC neon line: 22,000 Nm3/yr from Jan 2022 (~16% of Korean demand)"
+value_notes: >-
+  capacity_lost 0.5 sits inside the sourced 45-54% band. buffers.Ne_purified
+  6.0 is the documented UPPER end (largest producers only; smaller makers held
+  4-6 weeks) — kept as frozen since this event trained ALPHA; a data PR
+  revisiting it must register predictions first (AGENTS.md rule 3).
 
 expected:               # acceptance band encoding the historical record, applied
                         # to the stockpiled (historical) replay in both protocols

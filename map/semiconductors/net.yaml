@@ -12,9 +12,13 @@
 #
 # Provenance schema (PLAN.md §2): every numeric parameter carries
 #   {value, units, source, confidence: A|B|C, date}
-# Confidence grades are assigned by reviewers, not authors. Every parameter
-# below is confidence C — a session estimate that still needs a citation.
-# Do not invent citations; replace `source` with a real URL in a data PR.
+# Confidence grades are assigned by reviewers, not authors. Parameters whose
+# values a real source supports now carry that URL (added 2026-07-27; each
+# fetched and quote-checked before citing — see the PR); everything else is
+# still a session estimate. ALL confidences remain C until the reviewer
+# upgrades them. `note` keys record how a citation anchors a value (or where
+# a documented figure disagrees with the session estimate); the loader
+# ignores them. Do not invent citations.
 
 _session_estimate: &sess
   source: "session estimate — needs citation"
@@ -37,7 +41,19 @@ places:
   - name: Ga_refined
     region: china
     initial_tokens: {value: 1, units: tokens, <<: *sess}
-    rebuild_years:  {value: 2.5, units: years, <<: *sess}
+    rebuild_years:
+      value: 2.5
+      units: years
+      confidence: C
+      date: "2026-07-27"
+      source: "https://www.csis.org/analysis/beyond-rare-earths-chinas-growing-threat-gallium-supply-chains"
+      note: >-
+        Western restart projects announced 2024-25 target 2027 output (Metlen
+        50 t/yr, Stade ~40 t/yr); CSIS: not at full capacity "before
+        mid-2027, at best" — i.e. ~2.5-3 years from the Dec 2024 ban.
+        Concentration context: China was 98% of primary low-purity gallium in
+        2023, 99% in 2024 (USGS MCS,
+        https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-gallium.pdf).
   - name: Ne_crude
     region: global
     initial_tokens: {value: 2, units: tokens, <<: *sess}
@@ -45,15 +61,45 @@ places:
   - name: Ne_purified
     region: mixed
     initial_tokens: {value: 1, units: tokens, <<: *sess}
-    rebuild_years:  {value: 1.5, units: years, <<: *sess}
+    rebuild_years:
+      value: 1.5
+      units: years
+      confidence: C
+      date: "2026-07-27"
+      source: "https://news.skhynix.com/sk-hynix-sources-neon-gas-locally/"
+      note: >-
+        The 2022 replacement ramp ran ~12-18 months: POSCO/TEMC line from Jan
+        2022, SK hynix 40% locally sourced by Oct 2022 (100% targeted 2024);
+        supply normalized through 2023 (see validation/events/neon_2022.yaml
+        sources).
   - name: EUV_tools
     region: netherlands
     initial_tokens: {value: 1, units: tokens, <<: *sess}
-    rebuild_years:  {value: 10, units: years, <<: *sess}
+    rebuild_years:
+      value: 10
+      units: years
+      confidence: C
+      date: "2026-07-27"
+      source: "https://www.trendforce.com/news/2024/12/23/news-asml-ceo-christophe-fouquet-u-s-euv-export-ban-causes-chinas-chip-making-to-lag-by-10-15-years/"
+      note: >-
+        ASML CEO Fouquet (NRC interview, Dec 2024): a country denied EUV
+        machines lags "10 to 15 years" — and he called that optimistic. 10 is
+        the low end of the documented replication estimate.
   - name: EUV_optics
     region: germany            # Zeiss, sole source
     initial_tokens: {value: 1, units: tokens, <<: *sess}
-    rebuild_years:  {value: 15, units: years, <<: *sess}
+    rebuild_years:
+      value: 15
+      units: years
+      confidence: C
+      date: "2026-07-27"
+      source: "https://www.trendforce.com/news/2024/12/23/news-asml-ceo-christophe-fouquet-u-s-euv-export-ban-causes-chinas-chip-making-to-lag-by-10-15-years/"
+      note: >-
+        Upper end of the documented 10-15 year replication estimate; Zeiss
+        SMT is ASML's single supplier of optics (ASML 20-F,
+        https://www.sec.gov/Archives/edgar/data/0000937966/000093796617000007/a20-fasml2016.htm)
+        and its EUV-optics program is 30 years old
+        (https://www.zeiss.com/semiconductor-manufacturing-technology/news-and-events/smt-press-releases/2025/euv-30-years.html).
   - name: EUV_worn
     region: taiwan
     initial_tokens: {value: 0, units: tokens, <<: *sess}
@@ -61,15 +107,42 @@ places:
   - name: Wafers_advanced
     region: taiwan
     initial_tokens: {value: 1, units: tokens, <<: *sess}
-    rebuild_years:  {value: 8, units: years, <<: *sess}
+    rebuild_years:
+      value: 8
+      units: years
+      <<: *sess
+      note: >-
+        Session estimate between documented anchors: fab/plant construction
+        runs ~2-4 years on average
+        (https://www.construction-physics.com/p/how-to-build-a-20-billion-semiconductor)
+        but replicating a concentrated capability abroad is documented as far
+        harder (ecosystem/talent gaps: https://www.cfr.org/articles/onshoring-semiconductor-production-national-security-versus-economic-efficiency).
   - name: Chips_fabbed
     region: taiwan
     initial_tokens: {value: 0, units: tokens, <<: *sess}
-    rebuild_years:  {value: 8, units: years, <<: *sess}
+    rebuild_years:
+      value: 8
+      units: years
+      <<: *sess
+      note: >-
+        Session estimate between documented anchors: a leading-edge fab costs
+        $10-20B+ and builds in ~2-4 years (construction-physics.com, above),
+        while Taiwan holds ~92% of most-advanced capacity
+        (https://www.usitc.gov/publications/332/executive_briefings/ebot_silicon_island_taiwan_semiconductor.pdf)
+        and replicating the TSMC-class ecosystem abroad is documented only
+        qualitatively as much slower.
   - name: Chips_packaged
     region: taiwan
     initial_tokens: {value: 0, units: tokens, <<: *sess}
-    rebuild_years:  {value: 4, units: years, <<: *sess}
+    rebuild_years:
+      value: 4
+      units: years
+      <<: *sess
+      note: >-
+        Session estimate; documented anchor: Amkor's Peoria AZ advanced
+        packaging plant targeted first-phase production ~2-3 years from its
+        2023 announcement
+        (https://www.manufacturingdive.com/news/amkor-to-construct-2-billion-semiconductor-packaging-and-test-facility-in-Peoria-arizona/701268/).
   - name: Goods
     region: global
     initial_tokens: {value: 0, units: tokens, <<: *sess}
@@ -94,6 +167,13 @@ transitions:
     outputs: {Ga_refined: 1}
     inhibitors: [ExportBan_CN_US]
     capacity: {value: 1.0, units: relative flow, <<: *sess}
+    note: >-
+      The concentration and the inhibitor are documented: China produced 98%
+      (2023) / 99% (2024) of primary low-purity gallium (USGS MCS,
+      https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-gallium.pdf), imposed
+      export licensing Aug 2023 and a US-targeted export ban Dec 3, 2024
+      (MOFCOM Doc. 46;
+      https://www.csis.org/analysis/china-imposes-its-most-stringent-critical-minerals-export-restrictions-yet-amidst).
   - name: Purify_Ne
     region: mixed
     inputs:  {Ne_crude: 1}
@@ -105,6 +185,11 @@ transitions:
     outputs: {Chips_fabbed: 1}
     read_arcs: {EUV_tools: 1}
     capacity: {value: 1.0, units: relative flow, <<: *sess}
+    note: >-
+      Region documented: Taiwan held ~92% of world manufacturing capacity for
+      the most advanced chips in 2021 (USITC,
+      https://www.usitc.gov/publications/332/executive_briefings/ebot_silicon_island_taiwan_semiconductor.pdf);
+      >90% still cited for 2024 (CFR).
   - name: Package
     region: taiwan
     inputs:  {Chips_fabbed: 1}
@@ -124,19 +209,45 @@ transitions:
     region: global
     inputs:  {E_waste: 1}
     outputs: {Ga_byproduct: 1}
-    capacity: {value: 0.05, units: relative flow, <<: *sess}   # near-dead loop closure
+    capacity:            # near-dead loop closure
+      value: 0.05
+      units: relative flow
+      <<: *sess
+      note: >-
+        Direction documented: USGS records old-scrap (end-of-life) gallium
+        recycling as literally "none" (US data, 2024 and 2025 editions;
+        https://pubs.usgs.gov/periodicals/mcs2025/mcs2025-gallium.pdf) — only
+        new manufacturing scrap is recycled. If anything 0.05 is generous.
 
   # -- EquipMfg subnet (REFINED from ORACLE_EquipMfg in the design session) --
   - name: Build_EUV
     region: netherlands
     inputs:  {Chips_packaged: 1, EUV_optics: 1}
     outputs: {EUV_tools: 1}
-    capacity: {value: 0.03, units: relative flow, <<: *sess}   # tools are slow to build
+    capacity:            # tools are slow to build
+      value: 0.03
+      units: relative flow
+      <<: *sess
+      note: >-
+        Slowness anchor: ASML (the sole EUV maker) recognized revenue on 40
+        EUV systems in 2022 and 53 in 2023 — a few dozen per year against the
+        world's entire fab base (ASML 2023 Annual Report,
+        https://www.asml.com/en/investors/annual-report/2023). The 0.03
+        relative flow itself remains a session estimate.
   - name: Wear_EUV
     region: taiwan
     inputs:  {EUV_tools: 1}
     outputs: {EUV_worn: 1}
-    capacity: {value: 0.15, units: relative flow, <<: *sess}   # tools wear ~15%/period
+    capacity:            # tools wear ~15%/period
+      value: 0.15
+      units: relative flow
+      <<: *sess
+      note: >-
+        Wear here means "cycles into refurbishable state", not death: ASML
+        reports 95% of all systems sold in 30 years still active and runs a
+        refurbished-systems business ("We measure a machine's life in
+        decades", https://www.asml.com/en/products/refurbished-systems) —
+        which is also the documented anchor for the Refurb loop below.
   - name: Refurb
     region: netherlands
     inputs:  {EUV_worn: 1, Chips_packaged: 1}
@@ -156,6 +267,10 @@ transitions:
     region: japan
     outputs: {Wafers_advanced: 1}
     capacity: {value: 1.0, units: relative flow, <<: *sess}
+    note: >-
+      Concentration documented: Shin-Etsu (~28%) + SUMCO (~23%) hold just
+      over half of global 300mm wafer supply; the top five control ~85%
+      (https://www.mordorintelligence.com/industry-reports/semiconductor-silicon-wafer-market).
   - name: ORACLE_Optics
     oracle: true
     interface: map/_oracles/optics.yaml

@@ -17,8 +17,46 @@
   "counterfactual_buffer_months": 0.5,
   "observable": "fab",
   "history": "no fab stoppages; supply normalized ~12-18mo",
-  "history_note": "No major fab stoppages were attributed to neon; chipmakers had built ~6-month stockpiles after the 2014 Crimea price spike. Alternative purification capacity ramped over roughly 12-18 months.",
-  "sources": [],
+  "history_note": "No major fab stoppages were attributed to neon; chipmakers had built stockpiles after the 2014 Crimea price spike (documented range: up to ~6 months at the largest producers, 4-6 weeks at smaller ones — the yaml's 6.0 is the documented upper end, see sources). Alternative purification capacity ramped over roughly 12-18 months (Korea: POSCO/TEMC line from Jan 2022, SK hynix 40% locally sourced by Oct 2022; China's share rose). Neon prices spiked ~9x invasion-day levels within ~6 weeks (China wholesale).",
+  "sources": [
+   {
+    "url": "https://www.business-standard.com/article/international/ukraine-halts-half-of-world-s-neon-output-for-chips-clouding-outlook-122031200039_1.html",
+    "publisher": "Reuters (wire text via Business Standard mirror)",
+    "date": "2022-03-12",
+    "supports": "Ingas + Cryoin = 45-54% of world semiconductor-grade neon; both halted by 2022-03-11; 2014 Crimea spike ~600%; stockpile estimates 'vary widely'"
+   },
+   {
+    "url": "https://www.usitc.gov/publications/332/executive_briefings/ebot_decarlo_goodman_ukraine_neon_and_semiconductors.pdf",
+    "publisher": "U.S. International Trade Commission (Executive Briefings on Trade)",
+    "date": "2022-04",
+    "supports": "Ukraine ~half of world neon (Soviet steel-industry legacy; byproduct of liquid-oxygen generation); Cryoin + Ingas unable to produce as of 2022-03-11; post-2014 prices spiked >600%; firms stockpiled"
+   },
+   {
+    "url": "https://techmonitor.ai/silicon/chip-industry-russia-ukraine-war-neon",
+    "publisher": "Tech Monitor",
+    "date": "2022-03",
+    "supports": "larger chip producers held up to ~6 months of neon; smaller makers 4-6 weeks; contingency plans date to Crimea 2014"
+   },
+   {
+    "url": "https://www.scmp.com/tech/tech-trends/article/3170869/war-ukraine-inflates-price-neon-chip-making-it-might-be-good-china",
+    "publisher": "South China Morning Post",
+    "date": "2022-04",
+    "supports": "China wholesale industrial neon ~9x the Feb 24 quote within ~6 weeks; China's global share projected to rise ~30% -> ~50%"
+   },
+   {
+    "url": "https://news.skhynix.com/sk-hynix-sources-neon-gas-locally/",
+    "publisher": "SK hynix Newsroom",
+    "date": "2022-10",
+    "supports": "40% of SK hynix neon locally sourced by Oct 2022 (POSCO), 100% targeted 2024 — the alternative-supply ramp"
+   },
+   {
+    "url": "https://www.koreaherald.com/article/2759302",
+    "publisher": "The Korea Herald",
+    "date": "2022-01",
+    "supports": "POSCO/TEMC neon line: 22,000 Nm3/yr from Jan 2022 (~16% of Korean demand)"
+   }
+  ],
+  "value_notes": "capacity_lost 0.5 sits inside the sourced 45-54% band. buffers.Ne_purified 6.0 is the documented UPPER end (largest producers only; smaller makers held 4-6 weeks) — kept as frozen since this event trained ALPHA; a data PR revisiting it must register predictions first (AGENTS.md rule 3).",
   "expected": {
    "dip_pct": 0,
    "recovery_months": 15,
@@ -56,7 +94,33 @@
   },
   "observable": "fab",
   "history": "minor global impact",
-  "sources": [],
+  "sources": [
+   {
+    "url": "https://sst.semiconductor-digest.com/2011/03/japan-march-11-earthquake-semiconductor-production-update/",
+    "publisher": "Semiconductor Digest (relaying IHS iSuppli, 2011-03-21)",
+    "date": "2011-03",
+    "supports": "25% of global silicon wafer production suspended: Shin-Etsu Shirakawa 20% + MEMC Utsunomiya 5%"
+   },
+   {
+    "url": "https://www.shinetsu.co.jp/en/news/others/updated-current-situations-at-the-shin-etsu-groups-plants-impacted-by-the-great-east-japan-earthquake-11th-report/",
+    "publisher": "Shin-Etsu Chemical (official earthquake report #11)",
+    "date": "2011-07-01",
+    "supports": "Shirakawa production capacity recovered to pre-quake level by 2011-07-01 (partial restart 2011-04-20; inventory shipments from 2011-04-11) — ramp_tau_months 4.0 matches this ~3.5-month restoration"
+   },
+   {
+    "url": "https://sst.semiconductor-digest.com/2012/02/record-semiconductor-sales-in-2011-says-sia/",
+    "publisher": "Semiconductor Digest (relaying SIA/WSTS)",
+    "date": "2012-02",
+    "supports": "2011 worldwide semiconductor sales a record $299.5B, +0.4% YoY despite the quake — 'minor global impact'"
+   },
+   {
+    "url": "https://www.worldfinance.com/news/global-supply-chain-rattled-by-japan-quake-tsunami",
+    "publisher": "World Finance (quoting TSMC)",
+    "date": "2011-03",
+    "supports": "TSMC held 'at least 30 days' of raw wafer/materials inventory"
+   }
+  ],
+  "value_notes": "capacity_lost 0.25 is the sourced IHS iSuppli figure (production suspended, not destroyed). buffers.Wafers 2.0 is ABOVE the best-documented figures (TSMC ~30 days; a Merrill Lynch analyst said 'mere weeks' industry-wide) — discrepancy recorded here rather than silently changed; a data PR lowering it must register predictions before the replay runs (AGENTS.md rule 3).",
   "expected": {
    "dip_pct": 0,
    "recovery_months": 0,
@@ -94,7 +158,27 @@
   },
   "observable": "delivered",
   "history": "price spike, brief pain, no catastrophe",
-  "sources": [],
+  "sources": [
+   {
+    "url": "https://scholar.lib.vt.edu/VA-news/ROA-Times/issues/1993/rt9307/930723/07230121.htm",
+    "publisher": "Roanoke Times & World-News (Virginia Tech news archive)",
+    "date": "1993-07-23",
+    "supports": "July 4 fire destroyed the Sumitomo Chemical plant in Niihama supplying 60% of the epoxy resin for DRAM manufacture; some memory prices ~doubled in weeks (1MB module $55 -> $120); analysts called the rise anticipatory, 'not because [a shortage] exists'"
+   },
+   {
+    "url": "https://www.techmonitor.ai/technology/chip_panic_to_intensify_as_epoxy_stocks_dwindle",
+    "publisher": "Tech Monitor (Computer Business Review archive, 1993-08-04)",
+    "date": "1993-08-04",
+    "supports": "explosion cut off 60% of world production of the encapsulation epoxy; most companies held one-two months of resin inventory (buffers 1.5 sits in this band); within a month Sumitomo had arranged >half its usual output from other Japanese producers"
+   },
+   {
+    "url": "https://www.upi.com/Archives/1993/07/22/Computer-memory-chip-prices-stabilize-after-factory-fire-sends-them-soaring/7204743313600/",
+    "publisher": "UPI Archives",
+    "date": "1993-07-22",
+    "supports": "headline: memory-chip prices stabilize after the factory fire sent them soaring (fetch-blocked at citation time; verified live for the essay in blog PR #6)"
+   }
+  ],
+  "value_notes": "capacity_lost 0.60 is the contemporaneously sourced world-supply share. The 'brief pain' record: substitution covered >50% of lost output within a month, and the November 1993 UPI follow-up ('resin shortage averted', 1993-11-30) closes the arc at ~5 months — consistent with the acceptance band's recovery 3±3 mo.",
   "expected": {
    "dip_pct": 15,
    "recovery_months": 3,
@@ -134,7 +218,39 @@
   },
   "observable": "fab",
   "history": "non-event",
-  "sources": [],
+  "sources": [
+   {
+    "url": "https://www.usitc.gov/publications/332/working_papers/the_south_korea-japan_trade_dispute_in_context_semiconductor_manufacturing_chemicals_and_concentrated_supply_chains.pdf",
+    "publisher": "USITC (Office of Industries Working Paper ID-19-062)",
+    "date": "2019-10",
+    "supports": "July 1, 2019: Japan restricted exports of hydrogen fluoride, fluorinated polyimides, and photoresist to Korea; Japan ~90% of global photoresist production and >90% of Korea's 2018 photoresist imports; resist stockpiles typically minimal (shelf life 3-6 months)"
+   },
+   {
+    "url": "https://www.koreatimes.co.kr/www/tech/2019/07/133_271762.html",
+    "publisher": "The Korea Times",
+    "date": "2019-07",
+    "supports": "Korean chipmakers held about two months of inventories (company-dependent) — buffers 2.0"
+   },
+   {
+    "url": "https://www.theinvestor.co.kr/article/2070989",
+    "publisher": "The Investor (Korea Herald)",
+    "date": "2019-08-08",
+    "supports": "first individual license (EUV photoresist to Samsung) approved 2019-08-08 — the fast-license ramp behind ramp_tau_months 1.0"
+   },
+   {
+    "url": "https://keia.org/the-peninsula/disrupting-supply-chains-evidence-on-the-japan-korea-conflict/",
+    "publisher": "Korea Economic Institute of America",
+    "date": "2026-07-27 (accessed)",
+    "supports": "photoresist exports permitted from August; moved to a bulk general license in December 2019 — realized photoresist disruption small"
+   },
+   {
+    "url": "https://www.rieti.go.jp/en/columns/v01_0201.html",
+    "publisher": "RIETI",
+    "date": "2026-07-27 (accessed)",
+    "supports": "hydrogen fluoride exports to Korea fell ~87.9%, but NOT photoresist or fluorinated polyimide — the non-event applies to the photoresist channel this replay models"
+   }
+  ],
+  "value_notes": "feared_capacity_lost 0.90 is the sourced Japanese share; capacity_lost 0.15 (realized) remains a session estimate of the small realized disruption — no source quantifies the realized photoresist supply drop directly (Korean chip OUTPUT showed no significant change, and licenses flowed from August). Nuance recorded: hydrogen fluoride, not modeled here, was the harder-hit material.",
   "tau_replay": {
    "capacity_lost": 0.9
   },
@@ -173,6 +289,25 @@
   "scope_reason": "no demand dynamics",
   "observable": "delivered",
   "history": "demand surge + ordering whiplash while fab capacity stayed intact; shortages persisted ~2 years",
-  "sources": []
+  "sources": [
+   {
+    "url": "https://www.csis.org/analysis/strategic-importance-legacy-chips",
+    "publisher": "CSIS (Shivakumar, Wessner, Howell)",
+    "date": "2023-03-03",
+    "supports": "demand surge + just-in-time auto supply chains more to blame than pandemic supply disruption; automakers canceled chip contracts then could not reorder (bullwhip), locked out from early 2021 to mid-2022"
+   },
+   {
+    "url": "https://press.spglobal.com/2023-07-13-S-P-Global-Mobility-The-semiconductor-shortage-is-mostly-over-for-the-auto-industry",
+    "publisher": "S&P Global Mobility",
+    "date": "2023-07-13",
+    "supports": "shortage hobbled vehicle production for most of 2021 and 2022; 'new normal' by mid-2023 — the ~2-year duration"
+   },
+   {
+    "url": "https://www.pcworld.com/article/394407/chip-shortages-will-continue-until-2023-superfoundry-tsmc-says.html",
+    "publisher": "PCWorld (reporting TSMC Q1 2021 earnings)",
+    "date": "2021-04-15",
+    "supports": "TSMC running at 'over 100% utilization' — fab capacity intact and saturated, i.e. a demand-side event"
+   }
+  ]
  }
 ]

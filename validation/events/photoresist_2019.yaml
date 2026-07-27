@@ -19,8 +19,36 @@ buffers:
 observable: fab
 
 history: "non-event"
-sources: []             # citations still needed — facts as recorded in the design
-                        # session (docs/TRANSCRIPT.md); provenance rule in AGENTS.md
+sources:                # added 2026-07-27; every URL fetched and quote-checked
+                        # before citing (see PR); confidence grades remain for
+                        # the reviewer (AGENTS.md rule 4)
+  - url: https://www.usitc.gov/publications/332/working_papers/the_south_korea-japan_trade_dispute_in_context_semiconductor_manufacturing_chemicals_and_concentrated_supply_chains.pdf
+    publisher: "USITC (Office of Industries Working Paper ID-19-062)"
+    date: "2019-10"
+    supports: "July 1, 2019: Japan restricted exports of hydrogen fluoride, fluorinated polyimides, and photoresist to Korea; Japan ~90% of global photoresist production and >90% of Korea's 2018 photoresist imports; resist stockpiles typically minimal (shelf life 3-6 months)"
+  - url: https://www.koreatimes.co.kr/www/tech/2019/07/133_271762.html
+    publisher: "The Korea Times"
+    date: "2019-07"
+    supports: "Korean chipmakers held about two months of inventories (company-dependent) — buffers 2.0"
+  - url: https://www.theinvestor.co.kr/article/2070989
+    publisher: "The Investor (Korea Herald)"
+    date: "2019-08-08"
+    supports: "first individual license (EUV photoresist to Samsung) approved 2019-08-08 — the fast-license ramp behind ramp_tau_months 1.0"
+  - url: https://keia.org/the-peninsula/disrupting-supply-chains-evidence-on-the-japan-korea-conflict/
+    publisher: "Korea Economic Institute of America"
+    date: "2026-07-27 (accessed)"
+    supports: "photoresist exports permitted from August; moved to a bulk general license in December 2019 — realized photoresist disruption small"
+  - url: https://www.rieti.go.jp/en/columns/v01_0201.html
+    publisher: "RIETI"
+    date: "2026-07-27 (accessed)"
+    supports: "hydrogen fluoride exports to Korea fell ~87.9%, but NOT photoresist or fluorinated polyimide — the non-event applies to the photoresist channel this replay models"
+value_notes: >-
+  feared_capacity_lost 0.90 is the sourced Japanese share; capacity_lost 0.15
+  (realized) remains a session estimate of the small realized disruption —
+  no source quantifies the realized photoresist supply drop directly (Korean
+  chip OUTPUT showed no significant change, and licenses flowed from
+  August). Nuance recorded: hydrogen fluoride, not modeled here, was the
+  harder-hit material.
 
 tau_replay:             # protocol-v0 inputs where they differ from the defaults:
   capacity_lost: 0.90   # v0 replayed the FEARED fraction (the "analog" row) with
