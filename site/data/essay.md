@@ -6,7 +6,7 @@ version: v0.3 — audited numbers + the policy section
 Versioned like the methodology: see `essay/VERSION` and `essay/CHANGELOG.md`.
 Every number in it traces to the repo's frozen baseline or its committed
 audits. The canonical, fullest version of this essay now lives on
-[the blog](https://wallar.me/posts/the-civilization-gradient/) — it carries
+[the blog](https://a20r.github.io/blog/posts/the-civilization-gradient/) — it carries
 two extra sections (the formal machinery, and a reflection on the method)
 that this repo-site copy omits.*
 
