@@ -18,6 +18,16 @@ version.
   (§9) added there, and sensitivity/price-experiment numbers quoted from an
   analysis whose repo artifacts had not yet landed. Recorded here
   retroactively; this repo copy stayed at the 8-section structure.
+- **v0.4** — the audit and the conclusion, in full (blog copy): the essay
+  absorbs the evidence it previously linked out to — the 500-draw audit
+  summary, the buffer-rule table, both robust marginal-value tables, the
+  mean-vs-tail comparison, and the price experiment's two result tables
+  now sit inline in §8/§9 of the blog copy, styled on the site theme.
+  This repo-site copy stays prose-only (its client-side renderer has no
+  table support); the generated POLICY.md / SENSITIVITY.md /
+  PRICE_EXPERIMENT.md remain the regenerable sources of every number.
+  Includes the sign-label fix (strict directional fractions; exactly-zero
+  gradients support neither sign).
 - **v0.3** — audited numbers + the policy section, both copies: the §5
   sensitivity parenthetical and boneyard passage now quote the committed,
   reproducible audit (SENSITIVITY.md: big negative signs 85–92% under

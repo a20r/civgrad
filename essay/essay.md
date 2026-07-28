@@ -1,4 +1,4 @@
-version: v0.3 — audited numbers + the policy section
+version: v0.4 — audited numbers + the policy section
 
 # The civilization gradient
 
@@ -6,9 +6,12 @@ version: v0.3 — audited numbers + the policy section
 Versioned like the methodology: see `essay/VERSION` and `essay/CHANGELOG.md`.
 Every number in it traces to the repo's frozen baseline or its committed
 audits. The canonical, fullest version of this essay now lives on
-[the blog](https://a20r.github.io/blog/posts/the-civilization-gradient/) — it carries
-two extra sections (the formal machinery, and a reflection on the method)
-that this repo-site copy omits.*
+[the blog](https://a20r.github.io/blog/posts/the-civilization-gradient/) —
+it carries two extra sections (the formal machinery, and a reflection on
+the method) and the full audit and policy tables inline, which this
+repo-site copy summarizes in prose (its renderer has no table support);
+POLICY.md, SENSITIVITY.md, and PRICE_EXPERIMENT.md in the repo root are
+the regenerable sources of every number.*
 
 ## 1. An island with no off-island
 
@@ -212,7 +215,9 @@ both protocols — with the documented ~6-month stockpiles (an industry lesson
 from the 2014 Crimea price spike), no fab stoppage, matching history; the
 same run *without* stockpiles takes a ~17% hit, which is the model pricing
 what that lesson was worth. **Tōhoku 2011** passes: two months of wafer
-inventory dwarfs a ~0.3 month-equivalent integrated deficit. That inequality
+inventory dwarfs the integrated deficit — 1.0 month-equivalent under the
+imposed ramp, 0.6 as measured under the adaptation law (POLICY.md
+tabulates all six replays). That inequality
 — buffer-months versus the integral of the deficit while capacity ramps — is
 the single mechanism that decides nearly every event in the suite.
 **Photoresist 2019** passes as the non-event it was; and the counterfactual
