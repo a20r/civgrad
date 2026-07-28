@@ -8,10 +8,17 @@ A differentiable, hierarchical Petri net of the global supply chain. Goal:
 locate where marginal investment buys the most marginal resilience — and make
 the map improvable by the people who actually know each territory.
 
-**Essay + live demo:** <https://a20r.github.io/civgrad/> — the living essay
-(`essay/essay.md`, v0.1 scaffold) with the adaptive model running in the
-browser, deployed from `site/` on every merge to `main` (no build step; the
-JS port is CI-checked against the Python scorecard).
+**The essay** — the project's main deliverable, with the full audit and
+policy tables inline:
+<https://a20r.github.io/blog/posts/the-civilization-gradient/>. Its source
+of truth is the blog repo ([a20r/blog](https://github.com/a20r/blog),
+`posts/the-civilization-gradient.md`, version changelog alongside); this
+repo carries the model, the data, and the audits every one of its numbers
+traces to.
+
+**The model, live:** <https://a20r.github.io/civgrad/> — the interactive
+demo and scorecard mirror, deployed from `site/` on every merge to `main`
+(no build step; the JS port is CI-checked against the Python scorecard).
 
 The model is three layers over one net (currently: a semiconductor slice with
 oracles at every frontier):

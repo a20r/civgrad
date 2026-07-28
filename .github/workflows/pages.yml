@@ -1,4 +1,4 @@
-# Deploy the static demo/essay site from site/ on main. No build step — the
+# Deploy the static demo site (the model, live) from site/ on main. No build step — the
 # folder is uploaded as-is (plain HTML/JS/CSS; data JSON is committed and
 # freshness-checked by validate.yml). Uses the GitHub Actions Pages flow so
 # the site can live in /site without a gh-pages branch; configure-pages

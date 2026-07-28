@@ -87,3 +87,7 @@ Contents (write-up order):
    unexplored) — map/_oracles/README.md says what each expansion would test.
 4. Demand/allocation dynamics — the Sumitomo hysteresis fix; biggest known model gap.
 5. The explorable essay + demo site, reading everything from this repo.
+   (Done, then split: the essay's source of truth moved to the blog —
+   a20r/blog, `posts/the-civilization-gradient.md` — and `site/` here
+   hosts the live model + scorecard, linking there. Every essay number
+   still traces to this repo's frozen baseline and committed audits.)

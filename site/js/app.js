@@ -77,38 +77,26 @@ function renderMarkdown(md) {
   return out.join("\n");
 }
 
-// ------------------------------------------------------- essay assembly ----
+// ---------------------------------------------------------- page assembly ----
+// The essay's source of truth is the blog post (it embeds this same demo and
+// scorecard); this page hosts the model, live, and points there for the prose.
 
-function mountEssay(essayText) {
+const ESSAY_URL = "https://a20r.github.io/blog/posts/the-civilization-gradient/";
+
+function mountPage() {
   const essay = $("#essay");
   const demo = document.getElementById("demo-template").content.firstElementChild;
   const scorecard = document.getElementById("scorecard-template").content.firstElementChild;
-
-  if (essayText) {
-    const vm = essayText.match(/^\s*version:\s*(\S+)/m);
-    if (vm) $("#essay-version").textContent = `essay ${vm[1]} · `;
-    // split on marker comment lines; insert the matching section between chunks
-    const parts = essayText.split(/^<!--\s*(demo|scorecard)\s*-->\s*$/m);
-    let sawScorecard = false;
-    for (let i = 0; i < parts.length; i++) {
-      if (parts[i] === "demo") { essay.appendChild(demo); continue; }
-      if (parts[i] === "scorecard") { essay.appendChild(scorecard); sawScorecard = true; continue; }
-      const div = document.createElement("div");
-      div.innerHTML = renderMarkdown(parts[i]);
-      essay.appendChild(div);
-    }
-    if (!demo.isConnected) essay.appendChild(demo);
-    if (!sawScorecard) essay.appendChild(scorecard);
-  } else {
-    const note = document.createElement("p");
-    note.className = "essay-pending";
-    note.innerHTML = "The essay is being written (<code>essay/essay.md</code>, versioned like " +
-      "the methodology). The model is live below; everything it shows is generated from " +
-      '<a href="https://github.com/a20r/civgrad">the repository</a>.';
-    essay.appendChild(note);
-    essay.appendChild(demo);
-    essay.appendChild(scorecard);
-  }
+  const note = document.createElement("p");
+  note.className = "essay-pending";
+  note.innerHTML =
+    "This page is the model, live. The essay — the project's main " +
+    "deliverable, with the full audit and policy tables — lives on " +
+    `<a href="${ESSAY_URL}">the blog</a>; everything shown here is generated ` +
+    'from <a href="https://github.com/a20r/civgrad">the repository</a>.';
+  essay.appendChild(note);
+  essay.appendChild(demo);
+  essay.appendChild(scorecard);
 }
 
 // ------------------------------------------------------------- diagram ----
@@ -446,12 +434,11 @@ function buildControls(events) {
 // ----------------------------------------------------------------- boot ----
 
 async function boot() {
-  const [events, oracles, essayText] = await Promise.all([
+  const [events, oracles] = await Promise.all([
     fetch("data/events.json").then((r) => r.json()),
     fetch("data/oracles.json").then((r) => r.json()),
-    fetch("data/essay.md").then((r) => (r.ok ? r.text() : null)).catch(() => null),
   ]);
-  mountEssay(essayText);
+  mountPage();
   buildDiagram(oracles, (name) => {
     state.preset = null; state.target = name; state.observe = "fab";
     state.bufferPlace = outputPlaceOf(name);
