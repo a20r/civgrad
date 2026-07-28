@@ -176,7 +176,16 @@ def run_event(name, law="frozen", weights=None):
     elif law == "margin":
         fab, ship, _ = adapt_simulate_margin(*args)
     elif law == "rationed":
-        fab, ship = adapt_simulate_rationed(*args, weights)
+        if weights is None:
+            raise ValueError("law='rationed' needs explicit weights over "
+                             f"{PKG_CONSUMERS} (see gradient_weights())")
+        weights = jnp.asarray(weights, dtype=jnp.float64)
+        if weights.shape != (len(PKG_CONSUMERS),) or not bool(
+                jnp.all(jnp.isfinite(weights)) & (jnp.sum(weights) > 0)):
+            raise ValueError(f"weights must be {len(PKG_CONSUMERS)} finite "
+                             "values with a positive sum, one per "
+                             f"{PKG_CONSUMERS}")
+        fab, ship = adapt_simulate_rationed(*args, weights / jnp.sum(weights))
     traj = fab if ev["observe"] == "fab" else ship
     d, r = engine.dip_recovery_adapt(traj)
     return 100 * float(d), float(r)

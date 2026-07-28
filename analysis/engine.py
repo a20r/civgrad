@@ -10,7 +10,7 @@ reproduces the frozen baseline exactly at the unperturbed point.
 
 That equivalence is not assumed: `selfcheck()` asserts the twin against the
 frozen modules on every headline number (throughput, gradients, all four v1
-replays) and is run by tests/test_analysis_engine.py and by each analysis
+replays) and is run by tests/test_analysis.py and by each analysis
 entry point before any sweep. If the twin drifts from core/, everything here
 fails loudly rather than auditing the wrong model.
 
