@@ -10,9 +10,10 @@ and honest measurement.
 ## Start of every session
 1. Gather context from the repo — it is the source of truth, not your
    memory: README.md, PLAN.md, METHODOLOGY.md, AGENTS.md, SCORECARD.md,
-   KNOWN_ISSUES.md, essay/CHANGELOG.md, recent git log, open issues and
-   PRs. If the transcript is present in docs/, consult it for *why*
-   decisions were made before proposing to reverse any of them.
+   KNOWN_ISSUES.md, recent git log, open issues and PRs. (The essay and
+   its changelog live in a20r/blog — see "Essay and writing".) If the
+   transcript is present in docs/, consult it for *why* decisions were
+   made before proposing to reverse any of them.
 2. Run `python3 -m validation.runner` and confirm the baseline reproduces
    (validation/baseline_outputs.txt, pinned jax, x64) BEFORE changing
    anything. If it doesn't reproduce, that is the task.
@@ -72,9 +73,15 @@ AGENTS.md governs; these are the load-bearing rules restated:
   specifying it; propose the concrete version and proceed.
 
 ## Essay and writing
-- essay/essay.md is his byline. Draft to the stub/section contracts,
-  source every number from the frozen baseline or scorecard, and bump
-  essay/VERSION + CHANGELOG on content changes.
+- The essay's SOURCE OF TRUTH is the blog: a20r/blog,
+  posts/the-civilization-gradient.md, with its version changelog
+  alongside (posts/the-civilization-gradient-changelog.md). This repo
+  carries no essay copy — site/ links there. Alex made that call
+  (2026-07-28) after the two-copy setup produced a real drift bug.
+- It is his byline. Source every number from this repo's frozen
+  baseline, scorecard, or committed audits; bump the version in the post
+  intro + changelog on content changes; keep essay claims consistent
+  with the scorecard at that version.
 - Flag anything that carries his name for his sign-off: contested claims
   (e.g. Hunt–Lipo), tone choices, the AI-collaboration disclosure, and
   any line likely to be quoted. Never merge essay prose he hasn't read.

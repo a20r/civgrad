@@ -13,14 +13,16 @@ writes, deterministically:
                              re-serialized as JSON, so yaml comments and
                              formatting are not preserved — values are)
   site/data/oracles.json  <- map/_oracles/*.yaml (fog-node tooltips)
-  site/data/essay.md      <- essay/essay.md (copied; skipped until it exists)
+
+(The essay is no longer exported: its source of truth is the blog post,
+a20r/blog posts/the-civilization-gradient.md, and site/ hosts the live
+model only.)
 
 Infinities (yaml `.inf`) become the string "inf" — strict JSON has no
 Infinity literal; the site renders it as "never".
 """
 
 import json
-import shutil
 from pathlib import Path
 
 import yaml
@@ -59,13 +61,7 @@ def main():
     (OUT / "oracles.json").write_text(
         json.dumps(_sanitize(oracles), indent=1, ensure_ascii=False) + "\n")
 
-    essay = ROOT / "essay" / "essay.md"
-    if essay.exists():
-        shutil.copyfile(essay, OUT / "essay.md")
-        copied = ", essay.md"
-    else:
-        copied = " (essay/essay.md not present yet — skipped)"
-    print(f"wrote {OUT}/events.json, oracles.json{copied}")
+    print(f"wrote {OUT}/events.json, oracles.json")
 
 
 if __name__ == "__main__":

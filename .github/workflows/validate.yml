@@ -39,6 +39,15 @@ jobs:
             echo "::error::site/data is stale. Run 'python3 -m validation.export_site_data' and commit."
             exit 1
           }
+      - name: Analysis smokes (twin-vs-frozen selfcheck + tiny sweeps)
+        # The full SENSITIVITY/PRICE_EXPERIMENT/POLICY regenerations are NOT
+        # freshness-gated like SCORECARD.md: their draw-boundary percentages
+        # are not byte-stable across machines. The smokes still hard-assert
+        # (in engine.selfcheck) that the analysis twin reproduces the frozen
+        # baseline, which is the property that keeps the committed docs honest.
+        run: |
+          python3 -m analysis.sensitivity --smoke
+          python3 -m analysis.price_experiment --smoke
       - uses: actions/setup-node@v4
         with:
           node-version: "20"

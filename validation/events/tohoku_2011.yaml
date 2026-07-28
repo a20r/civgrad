@@ -16,8 +16,31 @@ buffers:
 observable: fab
 
 history: "minor global impact"
-sources: []             # citations still needed — facts as recorded in the design
-                        # session (docs/TRANSCRIPT.md); provenance rule in AGENTS.md
+sources:                # added 2026-07-27; every URL fetched and quote-checked
+                        # before citing (see PR); confidence grades remain for
+                        # the reviewer (AGENTS.md rule 4)
+  - url: https://sst.semiconductor-digest.com/2011/03/japan-march-11-earthquake-semiconductor-production-update/
+    publisher: "Semiconductor Digest (relaying IHS iSuppli, 2011-03-21)"
+    date: "2011-03"
+    supports: "25% of global silicon wafer production suspended: Shin-Etsu Shirakawa 20% + MEMC Utsunomiya 5%"
+  - url: https://www.shinetsu.co.jp/en/news/others/updated-current-situations-at-the-shin-etsu-groups-plants-impacted-by-the-great-east-japan-earthquake-11th-report/
+    publisher: "Shin-Etsu Chemical (official earthquake report #11)"
+    date: "2011-07-01"
+    supports: "Shirakawa production capacity recovered to pre-quake level by 2011-07-01 (partial restart 2011-04-20; inventory shipments from 2011-04-11) — ramp_tau_months 4.0 matches this ~3.5-month restoration"
+  - url: https://sst.semiconductor-digest.com/2012/02/record-semiconductor-sales-in-2011-says-sia/
+    publisher: "Semiconductor Digest (relaying SIA/WSTS)"
+    date: "2012-02"
+    supports: "2011 worldwide semiconductor sales a record $299.5B, +0.4% YoY despite the quake — 'minor global impact'"
+  - url: https://www.worldfinance.com/news/global-supply-chain-rattled-by-japan-quake-tsunami
+    publisher: "World Finance (quoting TSMC)"
+    date: "2011-03"
+    supports: "TSMC held 'at least 30 days' of raw wafer/materials inventory"
+value_notes: >-
+  capacity_lost 0.25 is the sourced IHS iSuppli figure (production suspended,
+  not destroyed). buffers.Wafers 2.0 is ABOVE the best-documented figures
+  (TSMC ~30 days; a Merrill Lynch analyst said 'mere weeks' industry-wide) —
+  discrepancy recorded here rather than silently changed; a data PR lowering
+  it must register predictions before the replay runs (AGENTS.md rule 3).
 
 expected:
   dip_pct: 0            # "minor global impact" -> shallow dip
