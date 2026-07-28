@@ -93,32 +93,32 @@ agreeing with the majority sign) and how often the entry ranks #1.
 |---|---:|---:|---|---:|
 | Fab | 157.04 | 51.42 | + robust (99%) / + robust (91%) | 9% / 10% |
 | Build_EUV | 81.79 | 11.14 | + robust (93%) / + robust (91%) | 36% / 23% |
-| Refine_Ga | 0.00 | 9.61 | - leaning (68%) / - leaning (67%) | 12% / 12% |
+| Refine_Ga | 0.00 | 9.61 | ~0 unstable (32%) / ~0 unstable (33%) | 12% / 12% |
 | Refurb | 3.15 | 7.61 | + robust (93%) / + robust (91%) | 4% / 3% |
 | Purify_Ne | 29.67 | 0.80 | ~0 unstable (53%) / + leaning (66%) | 14% / 22% |
 | Mine | 11.22 | 0.16 | + leaning (78%) / + leaning (82%) | 12% / 8% |
-| Recycle | 0.00 | 0.06 | - leaning (68%) / - leaning (67%) | 0% / 0% |
-| OpticsMfg | 0.00 | 0.01 | - leaning (70%) / - leaning (75%) | 1% / 0% |
-| Consume | 0.00 | 0.00 | - leaning (68%) / - leaning (68%) | 0% / 0% |
-| WaferSupply | 0.00 | 0.00 | - leaning (75%) / - leaning (85%) | 12% / 12% |
-| Package | -1.70 | -0.37 | ~0 unstable (53%) / + leaning (75%) | 0% / 3% |
-| Ship_Strait | -2.68 | -1.63 | - robust (91%) / - robust (87%) | 0% / 0% |
+| Recycle | 0.00 | 0.06 | ~0 unstable (32%) / ~0 unstable (33%) | 0% / 0% |
+| OpticsMfg | 0.00 | 0.01 | ~0 unstable (30%) / ~0 unstable (25%) | 1% / 0% |
+| Consume | 0.00 | 0.00 | ~0 unstable (32%) / ~0 unstable (32%) | 0% / 0% |
+| WaferSupply | 0.00 | 0.00 | ~0 unstable (25%) / ~0 unstable (15%) | 12% / 12% |
+| Package | -1.70 | -0.37 | ~0 unstable (51%) / + leaning (75%) | 0% / 3% |
+| Ship_Strait | -2.68 | -1.63 | - robust (89%) / - leaning (85%) | 0% / 0% |
 | Wear_EUV | -6.61 | -24.26 | - robust (92%) / - robust (91%) | 1% / 7% |
 
 | stockpile | single-scenario | prior-averaged | sign under fog (single / prior-avg) | #1 (single / prior-avg) |
 |---|---:|---:|---|---:|
 | EUV_tools | 0.695 | 0.511 | + robust (88%) / + robust (87%) | 44% / 48% |
-| EUV_worn | 0.848 | 0.434 | + robust (85%) / - leaning (66%) | 1% / 0% |
-| Ga_refined | 0.000 | 0.242 | + leaning (66%) / - leaning (68%) | 13% / 13% |
+| EUV_worn | 0.848 | 0.434 | + robust (85%) / ~0 unstable (34%) | 1% / 0% |
+| Ga_refined | 0.000 | 0.242 | + leaning (66%) / ~0 unstable (32%) | 13% / 13% |
 | Chips | -0.020 | 0.074 | + leaning (82%) / + leaning (82%) | 0% / 8% |
 | Ne_purified | 0.705 | 0.035 | + leaning (82%) / ~0 unstable (64%) | 20% / 15% |
 | Pkg | -0.016 | 0.015 | + leaning (79%) / + leaning (79%) | 0% / 2% |
 | Ne_crude | 0.358 | 0.013 | ~0 unstable (53%) / + leaning (65%) | 8% / 1% |
-| Ga_byproduct | 0.000 | 0.003 | - leaning (68%) / - leaning (67%) | 0% / 1% |
-| EUV_optics | 0.000 | 0.000 | + robust (86%) / - leaning (76%) | 1% / 0% |
-| E_waste | 0.000 | 0.000 | - leaning (68%) / - leaning (67%) | 0% / 0% |
-| Goods | 0.000 | 0.000 | - leaning (68%) / - leaning (67%) | 0% / 0% |
-| Wafers | 0.000 | 0.000 | + leaning (70%) / - leaning (85%) | 13% / 12% |
+| Ga_byproduct | 0.000 | 0.003 | ~0 unstable (32%) / ~0 unstable (33%) | 0% / 1% |
+| EUV_optics | 0.000 | 0.000 | + robust (86%) / ~0 unstable (24%) | 1% / 0% |
+| E_waste | 0.000 | 0.000 | ~0 unstable (32%) / ~0 unstable (33%) | 0% / 0% |
+| Goods | 0.000 | 0.000 | ~0 unstable (32%) / ~0 unstable (33%) | 0% / 0% |
+| Wafers | 0.000 | 0.000 | + leaning (70%) / ~0 unstable (15%) | 13% / 12% |
 
 ## 2. Mean objective vs tail objective
 

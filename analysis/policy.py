@@ -83,10 +83,13 @@ def gradient_vectors():
     return g1c, g1s, gec, ges, cap_cal, x_stock
 
 
-def sign_label(pos_pct):
-    """Robustness annotation from the parameter-fog sign fraction."""
-    conf = max(pos_pct, 100.0 - pos_pct)
-    sign = "+" if pos_pct >= 50.0 else "-"
+def sign_label(node):
+    """Robustness annotation from the STRICT directional fractions (draws
+    with exactly-zero gradients support neither sign and count for neither —
+    pos+neg need not reach 100)."""
+    pos, neg = node["pos_pct"], node["neg_pct"]
+    conf = max(pos, neg)
+    sign = "+" if pos >= neg else "-"
     if conf >= 85.0:
         return f"{sign} robust ({conf:.0f}%)"
     if conf >= 65.0:
@@ -240,7 +243,7 @@ def build_markdown(sens, g1c, g1s, gec, ges, T, w, gcv, gsv, btab):
         t = TNAMES[i]
         pa, pb = a["per_cap"][t], b["per_cap"][t]
         md.append(f"| {t} | {float(g1c[i]):.2f} | {float(gec[i]):.2f} "
-                  f"| {sign_label(pa['pos_pct'])} / {sign_label(pb['pos_pct'])} "
+                  f"| {sign_label(pa)} / {sign_label(pb)} "
                   f"| {pa['top1_pct']:.0f}% / {pb['top1_pct']:.0f}% |")
     md.append("")
     md.append("| stockpile | single-scenario | prior-averaged | sign under fog (single / prior-avg) | #1 (single / prior-avg) |")
@@ -250,7 +253,7 @@ def build_markdown(sens, g1c, g1s, gec, ges, T, w, gcv, gsv, btab):
         p = PLACES[i]
         pa, pb = a["per_stk"][p], b["per_stk"][p]
         md.append(f"| {p} | {float(g1s[i]):.3f} | {float(ges[i]):.3f} "
-                  f"| {sign_label(pa['pos_pct'])} / {sign_label(pb['pos_pct'])} "
+                  f"| {sign_label(pa)} / {sign_label(pb)} "
                   f"| {pa['top1_pct']:.0f}% / {pb['top1_pct']:.0f}% |")
     md.append("")
 

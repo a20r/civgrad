@@ -209,13 +209,17 @@ def score_gradients(g_c, g_s, label):
     out["modal_top_cap"] = name
     out["modal_top_cap_pct"] = 100.0 * cnt / len(top_c)
 
-    # per-node stats, consumed by analysis/policy.py
+    # per-node stats, consumed by analysis/policy.py. pos/neg are STRICT
+    # directional fractions — they need not sum to 100 (a few draws produce
+    # exactly-zero gradients, which support neither sign).
     out["per_cap"] = {
         t: {"pos_pct": 100.0 * float(jnp.mean(gc[:, T_IDX[t]] > 0)),
+            "neg_pct": 100.0 * float(jnp.mean(gc[:, T_IDX[t]] < 0)),
             "top1_pct": 100.0 * top_c.count(t) / len(top_c)}
         for t in TNAMES}
     out["per_stk"] = {
         p: {"pos_pct": 100.0 * float(jnp.mean(gs[:, P[p]] > 0)),
+            "neg_pct": 100.0 * float(jnp.mean(gs[:, P[p]] < 0)),
             "top1_pct": 100.0 * top_s.count(p) / len(top_s)}
         for p in PLACES}
 
